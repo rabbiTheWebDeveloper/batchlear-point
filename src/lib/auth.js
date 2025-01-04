@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
-import { queryClient } from '@/lib/query';
 
 // Constants
 const TOKEN_KEY = 'token';
@@ -118,7 +117,7 @@ export const getAuthHeaders = () => {
 export const logout = () => {
   try {
     // Clear all React Query cache
-    queryClient.clear();
+   
 
     // Remove cookies
     Cookies.remove(TOKEN_KEY);
