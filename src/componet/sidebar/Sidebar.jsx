@@ -42,6 +42,11 @@ export default function Sidebar() {
             </a>
           </li>
           <li>
+            <a href="/roommate" className="block p-2 hover:bg-gray-700 rounded">
+            Roommate
+            </a>
+          </li>
+          <li>
             <a href="/settings" className="block p-2 hover:bg-gray-700 rounded">
               Settings
             </a>
