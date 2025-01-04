@@ -15,7 +15,7 @@ const layout = ({ children }) => {
         <Sidebar />
 
         {/* Main Content */}
-        <main className="flex-grow bg-white p-6 shadow-md rounded-md m-4 md:ml-50">
+        <main className="flex-grow bg-white p-6 shadow-md rounded-md m-4 md:ml-50 w-5/6">
           {children}
         </main>
       </div>
