@@ -5,7 +5,7 @@ import { dbConnect } from "@/service/mongo";
 export async function getAllFromDB() {
   await dbConnect();
   const result = await MealTrackerModel.find({}).lean();
-  return replaceMongoIdInArray(result);
+  return replaceMongoIdInArray(JSON.parse(JSON.stringify(result)));
 }
 
 export const insertIntoDB = async (data) => {

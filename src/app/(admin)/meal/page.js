@@ -8,7 +8,7 @@ const page =async () => {
   console.log("data", data);
   return (
     <>
-      <MealTracker />
+      <MealTracker data={data} />
     </>
   );
 };
