@@ -21,7 +21,7 @@ const Roommate = ({ roommates}) => {
           if (response.error) {
             toast.error(response.error);
           } else {
-            toast.success("User added successfully!");
+            toast.success("Edit added successfully!");
             setNewRoommate({ name: "", phone: "" });// Clear the input field after adding
           }
         } catch (err) {
@@ -42,7 +42,6 @@ const Roommate = ({ roommates}) => {
         } catch (err) {
           toast.error("Failed to add user. Please try again.");
         }
-        // setRoommates([...roommates, newRoommate]);
       }
       setNewRoommate({ name: "", phone: "" });
     }
@@ -54,7 +53,7 @@ const Roommate = ({ roommates}) => {
       if (response.error) {
         toast.error(response.error);
       } else {
-        toast.success("User added successfully!");// Clear the input field after adding
+        toast.success("Deleted successfully!");// Clear the input field after adding
       }
     } catch (err) {
       toast.error("Failed to add user. Please try again.");
