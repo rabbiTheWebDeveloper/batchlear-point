@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { mealTrackerQuery } from "@/queries/mealTracker";
 import {
   getAffiliationBySpecificStatusAndDate,
   getOnBoardingBySpecificStatusAndDate,
@@ -9,7 +10,7 @@ import {
   updateOnBoardingDetailsQuery,
 } from "@/queries/onBoarding";
 import { createProductDB, deleteProduct } from "@/queries/product";
-import { updateSetting } from "@/queries/setting";
+// import { updateSetting } from "@/queries/setting";
 import { passwordChange, updatePersonalInfo } from "@/queries/user";
 import { revalidatePath } from "next/cache";
 
@@ -35,14 +36,14 @@ export async function userUpdatePassword(formData) {
   }
 }
 
-export async function userUpdateSetting(formData) {
-  try {
-    const response = await updatePersonalInfo(formData);
-    return response;
-  } catch (error) {
-    throw new Error(error);
-  }
-}
+// export async function userUpdateSetting(formData) {
+//   try {
+//     const response = await updatePersonalInfo(formData);
+//     return response;
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// }
 
 // export async function createProduct(formData) {
 //   // const user = Object.fromEntries(formData);
@@ -138,3 +139,17 @@ data
     throw new Error(error);
   }
 }
+
+export async function mealTrackerInsertAction(
+  data
+  ) {
+    try {
+      const response = await mealTrackerQuery.insertIntoDB(
+        data
+      );
+      revalidatePath(`/meal`);
+      return response;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
