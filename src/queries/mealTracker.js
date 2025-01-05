@@ -15,17 +15,32 @@ export const insertIntoDB = async (data) => {
     return replaceMongoIdInObject(JSON.parse(JSON.stringify(result)));
 };
 
-export const updateOneInDB = async (filter, updateData) => {
+// Function to update a specific meal in the database
+export const updateOneInDB = async (mainId, mealId, count, details) => {
   try {
-    const result = await MealTrackerModel.updateOne(filter, updateData, {
-      new: true, // Returns the updated document
-    });
+    console.log('Updating ' + mainId + ' ' + mealId + ' ' + count + ' ' + details);
+    // Prepare the filter to find the meal by `mainId` (user) and `mealId` (specific meal day)
+    const filter = { _id: mainId, 'meals._id': mealId };
+
+    // Prepare the update data to change `count` and `details` for the specific meal
+    const updateData = {
+      $set: {
+        'meals.$.count': count,    // Update meal count
+        'meals.$.details': details, // Update meal details
+      },
+    };
+
+    // Update the document in the DB
+    const result = await MealTrackerModel.updateOne(filter, updateData);
+
+    // Return the result after the update
     return result;
   } catch (error) {
     console.error("Error updating record in DB:", error);
     throw error;
   }
 };
+
 
 export const mealTrackerQuery = {
   insertIntoDB,

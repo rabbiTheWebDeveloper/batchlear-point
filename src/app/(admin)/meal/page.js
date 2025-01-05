@@ -1,11 +1,18 @@
 import React from "react";
-import MealTracker from "./_component/MealTracker";
 import { getAllFromDB } from "@/queries/mealTracker";
+import MealTracker from "./_component/MealTracker";
+// import dynamic from 'next/dynamic';
 
-const page =async () => {
+// const MealTracker = dynamic(() => import("./_component/MealTracker"), { ssr: false });
 
-  const data =await getAllFromDB();
-  console.log("data", data);
+const Page = async () => {
+  let data = [];
+  try {
+    data = await getAllFromDB();  // Fetch data from DB
+  } catch (error) {
+    console.error("Error fetching data:", error);  // Add error logging for debugging
+  }
+
   return (
     <>
       <MealTracker data={data} />
@@ -13,4 +20,4 @@ const page =async () => {
   );
 };
 
-export default page;
+export default Page;
