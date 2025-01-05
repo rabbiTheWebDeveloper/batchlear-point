@@ -162,7 +162,7 @@ export async function mealTrackerInsertAction(
         const response = await mealTrackerQuery.updateOneInDB(
           mainId, mealId, count, details
         );
-        // revalidatePath(`/meal`);
+        revalidatePath(`/meal`);
         return response;
       } catch (error) {
         throw new Error(error);

@@ -1,62 +1,47 @@
 "use client";
-import {
-  mealTrackerInsertAction,
-  mealTrackerUpdateAction,
-} from "@/app/actions";
-import React, { useState } from "react";
+import { mealTrackerInsertAction, mealTrackerUpdateAction } from "@/app/actions";
+import React, { useState, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 
 const MealTracker = ({ data: initialData }) => {
   const [data, setData] = useState(initialData);
   const [newUserName, setNewUserName] = useState("");
-  const [selectedDay, setSelectedDay] = useState(null); // For tracking selected day
-  const [mealCount, setMealCount] = useState(0); // For tracking meal count
-  const [mealDay, setMealDay] = useState(0); // For tracking meal count
-  const [mealDetails, setMealDetails] = useState(""); // For tracking details
-  const [isModalOpen, setIsModalOpen] = useState(false); // For modal visibility
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [mealCount, setMealCount] = useState(0);
+  const [mealDetails, setMealDetails] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-console.log("data", data)
-  // Function to open the modal
-  const openModal = (personIndex, dayIndex) => {
+  // Open modal with the selected meal's data
+  const openModal = useCallback((personIndex, dayIndex) => {
     const mealData = data[personIndex].meals[dayIndex];
     setSelectedDay({ personIndex, dayIndex });
     setMealCount(mealData.count);
     setMealDetails(mealData.details);
-    setMealDay(mealData.day);
     setIsModalOpen(true);
-    console.log("mealData", personIndex);
-  };
+  }, [data]);
 
-  // Function to close the modal
+  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  // Function to save the updated meal data
+  // Save meal update to the backend
   const saveMeal = async () => {
     if (selectedDay) {
       const { personIndex, dayIndex } = selectedDay;
       const meal = data[personIndex].meals[dayIndex];
-      const id = data[personIndex].id;
+      const id = data[personIndex]._id;
 
       try {
-        console.log("personIndex", data[personIndex]._id, personIndex)
-        // Call the API to update the meal in the backend
-        const response = await mealTrackerUpdateAction(
-          id, 
-          meal._id, // Meal ID (for the specific day)
-          mealCount,
-          mealDetails
-        );
+        const response = await mealTrackerUpdateAction(id, meal._id, mealCount, mealDetails);
         if (response.error) {
           toast.error(response.error);
         } else {
-          toast.success("User added successfully!");
+          toast.success("Meal updated successfully!");
+          const updatedData = [...data];
+          updatedData[personIndex].meals[dayIndex] = { ...meal, count: mealCount, details: mealDetails };
+          setData(updatedData); // Optimistically update the UI
         }
-        // console.log(updatedMeal);
-        // After successful update, update the state to reflect changes in UI
-        // updateMeal(personIndex, dayIndex, mealCount, mealDetails);
-        toast.success("Meal updated successfully!");
         closeModal();
       } catch (error) {
         toast.error("Failed to update meal. Please try again.");
@@ -64,20 +49,36 @@ console.log("data", data)
     }
   };
 
-  // Function to add a new user (this is assumed to be an API call)
+  // Add a new user
   const addUser = async () => {
-    const updatedData = { name: newUserName };
+    if (!newUserName.trim()) {
+      toast.error("Please enter a valid name.");
+      return;
+    }
+
     try {
-      const response = await mealTrackerInsertAction(updatedData);
+      const response = await mealTrackerInsertAction({ name: newUserName });
       if (response.error) {
         toast.error(response.error);
       } else {
         toast.success("User added successfully!");
+        setNewUserName(""); // Clear the input field after adding
       }
     } catch (err) {
       toast.error("Failed to add user. Please try again.");
     }
   };
+
+
+  const [isClient, setIsClient] = useState(false);
+
+useEffect(() => {
+  setIsClient(true);
+}, []);
+
+if (!isClient) {
+  return null; // or a loading spinner, etc.
+}
 
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen flex flex-col">
@@ -119,7 +120,7 @@ console.log("data", data)
                   className="p-2 border border-blue-500 text-center text-xs sm:text-sm md:text-base sticky top-0 z-10 w-8 sm:w-10 md:w-12 lg:w-16"
                 >
                   <button
-                    onClick={() => openModal(0, i)} // Open modal for first user and day 1 (You can modify for dynamic)
+                    onClick={() => openModal(0, i)} // Open modal for first user and day 1 (modify for dynamic)
                     className="text-white text-xs sm:text-sm"
                   >
                     {i + 1}
@@ -161,10 +162,7 @@ console.log("data", data)
         <h2 className="text-lg font-semibold mb-4">Total Meals per Person</h2>
         <ul className="space-y-2">
           {data.map((person, index) => (
-            <li
-              key={index}
-              className="flex justify-between bg-gray-100 p-2 rounded-md"
-            >
+            <li key={index} className="flex justify-between bg-gray-100 p-2 rounded-md">
               <span className="font-medium">{person.name}</span>
               <span className="font-bold text-blue-600">
                 {person.meals.reduce((sum, meal) => sum + meal.count, 0)}
@@ -184,7 +182,7 @@ console.log("data", data)
                 Meal Count
               </label>
               <label className="block text-sm font-medium mb-2">
-                Day - {mealDay}{" "}
+                Day - {mealDetails}
               </label>
               <input
                 type="number"
