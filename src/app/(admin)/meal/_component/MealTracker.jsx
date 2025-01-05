@@ -30,7 +30,7 @@ const MealTracker = ({ data: initialData }) => {
     if (selectedDay) {
       const { personIndex, dayIndex } = selectedDay;
       const meal = data[personIndex].meals[dayIndex];
-      const id = data[personIndex]._id;
+      const id = data[personIndex].id;
 
       try {
         const response = await mealTrackerUpdateAction(id, meal._id, mealCount, mealDetails);
