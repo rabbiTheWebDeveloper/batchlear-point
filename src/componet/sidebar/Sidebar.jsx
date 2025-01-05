@@ -1,4 +1,5 @@
 "use client";
+import { logout } from "@/lib/auth";
 import Link from "next/link";
 import React from "react";
 
@@ -21,7 +22,10 @@ export default function Sidebar() {
         </button>
         <ul className="space-y-4">
           <li>
-            <Link href="/dashboard" className="block p-2 hover:bg-gray-700 rounded">
+            <Link
+              href="/dashboard"
+              className="block p-2 hover:bg-gray-700 rounded"
+            >
               Dashboard
             </Link>
           </li>
@@ -37,13 +41,16 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <a href="/deposit-money" className="block p-2 hover:bg-gray-700 rounded">
-            Deposit Money
+            <a
+              href="/deposit-money"
+              className="block p-2 hover:bg-gray-700 rounded"
+            >
+              Deposit Money
             </a>
           </li>
           <li>
             <a href="/roommate" className="block p-2 hover:bg-gray-700 rounded">
-            Roommate
+              Roommate
             </a>
           </li>
           <li>
@@ -53,9 +60,12 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <a href="/settings" className="block p-2 hover:bg-gray-700 rounded">
+            <button
+              onClick={logout}
+              className="block p-2 hover:bg-gray-700 rounded"
+            >
               LogOut
-            </a>
+            </button>
           </li>
         </ul>
       </nav>

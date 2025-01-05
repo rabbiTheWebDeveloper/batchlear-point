@@ -6,6 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaBullseye } from "react-icons/fa";
 
 const Signin = () => {
@@ -38,7 +39,6 @@ const Signin = () => {
       const response = await axios.post(`${BASE_URL}/user/login-user`, data, {
         headers: { "Content-Type": "application/json" },
       });
- console.log(response);
       if (!response.status === 200) {
         // Handle errors from the server
         throw new Error(data.message || "Something went wrong!");
