@@ -30,28 +30,28 @@ export default function Sidebar() {
             </Link>
           </li>
           <li>
-            <a href="/meal" className="block p-2 hover:bg-gray-700 rounded">
+            <Link href="/meal" className="block p-2 hover:bg-gray-700 rounded">
               Meal
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/bazer" className="block p-2 hover:bg-gray-700 rounded">
+            <Link href="/bazer" className="block p-2 hover:bg-gray-700 rounded">
               Bazar
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a
+            <Link
               href="/deposit-money"
               className="block p-2 hover:bg-gray-700 rounded"
             >
               Deposit Money
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/roommate" className="block p-2 hover:bg-gray-700 rounded">
+            <Link href="/roommate" className="block p-2 hover:bg-gray-700 rounded">
               Roommate
-            </a>
+            </Link>
           </li>
           <li>
             <a href="/settings" className="block p-2 hover:bg-gray-700 rounded">
@@ -60,12 +60,12 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <button
-              onClick={logout}
+            <Link
+              href="/logout"
               className="block p-2 hover:bg-gray-700 rounded"
             >
               LogOut
-            </button>
+            </Link>
           </li>
         </ul>
       </nav>
