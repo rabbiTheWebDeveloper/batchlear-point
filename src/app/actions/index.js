@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { depositQuery } from "@/queries/deposit-money";
 import { mealTrackerQuery } from "@/queries/mealTracker";
 import {
   getAffiliationBySpecificStatusAndDate,
@@ -221,3 +222,55 @@ export async function mealTrackerInsertAction(
               throw new Error(error);
             }
           }
+
+
+
+
+          export async function depositInsertAction(
+            data
+            ) {
+             
+              try {
+                const response = await depositQuery.insertIntoDB(
+                  data
+                );
+                revalidatePath('/(admin)/deposit-money', 'page')
+                return response;
+              } catch (error) {
+                throw new Error(error);
+              }
+            }
+          
+      
+            export async function depositUpdateAction(
+              id,
+              data
+              ) {
+                // console.log("data", data);
+                try {
+                  const response = await depositQuery.updateOneInDB(
+                    id,
+                    data
+                  );
+                  revalidatePath('/(admin)/deposit-money', 'page')
+                  return response;
+                } catch (error) {
+                  throw new Error(error);
+                }
+              }
+      
+      
+              export async function depositDeleteAction(
+                id
+                ) {
+                  // console.log("data", data);
+                  try {
+                    const response = await depositQuery.deleteByIdFromDB(
+                      id
+                    );
+                    revalidatePath('/(admin)/deposit-money', 'page')
+                    return response;
+                  } catch (error) {
+                    throw new Error(error);
+                  }
+                }
