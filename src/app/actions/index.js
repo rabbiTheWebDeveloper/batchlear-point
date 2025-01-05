@@ -10,6 +10,7 @@ import {
   updateOnBoardingDetailsQuery,
 } from "@/queries/onBoarding";
 import { createProductDB, deleteProduct } from "@/queries/product";
+import { roommateQuery } from "@/queries/roommate";
 // import { updateSetting } from "@/queries/setting";
 import { passwordChange, updatePersonalInfo } from "@/queries/user";
 import { revalidatePath } from "next/cache";
@@ -147,7 +148,7 @@ export async function mealTrackerInsertAction(
       const response = await mealTrackerQuery.insertIntoDB(
         data
       );
-      revalidatePath(`/meal`);
+      revalidatePath('/(admin)/meal', 'page')
       return response;
     } catch (error) {
       throw new Error(error);
@@ -162,9 +163,61 @@ export async function mealTrackerInsertAction(
         const response = await mealTrackerQuery.updateOneInDB(
           mainId, mealId, count, details
         );
-        revalidatePath(`/meal`);
+    
+        revalidatePath('/(admin)/meal', 'page')
         return response;
       } catch (error) {
         throw new Error(error);
       }
     }
+
+
+
+    export async function roommateInsertAction(
+      data
+      ) {
+        console.log("data", data);
+        try {
+          const response = await roommateQuery.insertIntoDB(
+            data
+          );
+          revalidatePath('/(admin)/roommate', 'page')
+          return response;
+        } catch (error) {
+          throw new Error(error);
+        }
+      }
+    
+
+      export async function roommateUpdateAction(
+        id,
+        data
+        ) {
+          // console.log("data", data);
+          try {
+            const response = await roommateQuery.updateOneInDB(
+              id,
+              data
+            );
+            revalidatePath('/(admin)/roommate', 'page')
+            return response;
+          } catch (error) {
+            throw new Error(error);
+          }
+        }
+
+
+        export async function roommateDeleteAction(
+          id
+          ) {
+            // console.log("data", data);
+            try {
+              const response = await roommateQuery.deleteByIdFromDB(
+                id
+              );
+              revalidatePath('/(admin)/roommate', 'page')
+              return response;
+            } catch (error) {
+              throw new Error(error);
+            }
+          }
