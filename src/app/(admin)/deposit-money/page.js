@@ -14,7 +14,7 @@ const page = async() => {
     console.error("Error fetching data:", error);  // Add error logging for debugging
   }
 
-
+console.log(deposite)
   return (
 
     <>

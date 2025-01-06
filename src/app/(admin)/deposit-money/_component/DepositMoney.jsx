@@ -1,11 +1,13 @@
 "use client";
-import { depositInsertAction } from "@/app/actions";
+import { depositInsertAction, depositUpdateAction } from "@/app/actions";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import dynamic from 'next/dynamic';
 
 
 const DepositMoney = ({ persons, deposits : initialDeposits }) => {
   const [deposits, setDeposits] = useState(initialDeposits);
+  
   const [newDeposit, setNewDeposit] = useState({
     personId: "",
     amount: "",
@@ -16,21 +18,33 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
   console.log(deposits)
   const [editDeposit, setEditDeposit] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
-
   const handleDeposit =async () => {
     if (!newDeposit.personId || !newDeposit.amount || !newDeposit.date || !newDeposit.description) {
-      alert("Please fill out all fields.");
+      toast.error("Please fill out all fields.");
       return;
     }
 
     if (editDeposit) {
-      setDeposits(
-        deposits.map((deposit) =>
-          deposit.id === editDeposit.id
-            ? { ...editDeposit, ...newDeposit, amount: parseFloat(newDeposit.amount) }
-            : deposit
-        )
-      );
+      // setDeposits(
+      //   deposits.map((deposit) =>
+      //     deposit.id === editDeposit.id
+      //       ? { ...editDeposit, ...newDeposit, amount: parseFloat(newDeposit.amount) }
+      //       : deposit
+      //   )
+      // );
+
+
+      try {
+        const response = await depositUpdateAction( editDeposit.id,newDeposit);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          toast.success("ADD added successfully!");
+          setNewRoommate({ name: "", phone: "" });// Clear the input field after adding
+        }
+      } catch (err) {
+        toast.error("Failed to add user. Please try again.");
+      }
       setEditDeposit(null);
     } else {
       // setDeposits([
@@ -124,7 +138,7 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
           <tbody>
             {deposits.map((deposit) => (
               <tr key={deposit.id} className="hover:bg-gray-100">
-                <td className="p-2 border">{deposit.name}</td>
+                <td className="p-2 border">{deposit?.person?.name}</td>
                 <td className="p-2 border">{deposit.amount}</td>
                 <td className="p-2 border">{deposit.date}</td>
                 <td className="p-2 border">

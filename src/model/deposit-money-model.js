@@ -2,8 +2,7 @@ import mongoose, { Schema } from "mongoose";
 const depositSchema = new mongoose.Schema({
   personId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Roommate',
-    required: true,
+    ref: "Roommate",
   },
   amount: {
     type: Number,
@@ -22,4 +21,4 @@ const depositSchema = new mongoose.Schema({
 }, { timestamps: true  ,versionKey:false});
 
 export const DepositModel =
-  mongoose.models.mealTracker ?? mongoose.model("Deposit", depositSchema);
+  mongoose.models.Deposit ?? mongoose.model("Deposit", depositSchema);

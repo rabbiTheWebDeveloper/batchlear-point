@@ -86,7 +86,7 @@ useEffect(() => {
   setIsClient(true);
 }, []);
 
-if (!isClient) {
+if (!isClient || isLoading) {
   return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
 }
 
