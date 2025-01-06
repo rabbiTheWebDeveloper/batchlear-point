@@ -1,6 +1,7 @@
 "use server";
 
 import { signIn } from "@/auth";
+import { bazerQuery } from "@/queries/bazer";
 import { depositQuery } from "@/queries/deposit-money";
 import { mealTrackerQuery } from "@/queries/mealTracker";
 import {
@@ -274,3 +275,54 @@ export async function mealTrackerInsertAction(
                     throw new Error(error);
                   }
                 }
+
+
+
+                export async function bazerInsertAction(
+                  data
+                  ) {
+                   
+                    try {
+                      const response = await bazerQuery.insertIntoDB(
+                        data
+                      );
+                      revalidatePath('/(admin)/bazer', 'page')
+                      return response;
+                    } catch (error) {
+                      throw new Error(error);
+                    }
+                  }
+                
+            
+                  export async function bazerUpdateAction(
+                    id,
+                    data
+                    ) {
+                      // console.log("data", data);
+                      try {
+                        const response = await bazerQuery.updateOneInDB(
+                          id,
+                          data
+                        );
+                        revalidatePath('/(admin)/bazer', 'page')
+                        return response;
+                      } catch (error) {
+                        throw new Error(error);
+                      }
+                    }
+            
+            
+                    export async function bazerDeleteAction(
+                      id
+                      ) {
+                        // console.log("data", data);
+                        try {
+                          const response = await bazerQuery.deleteByIdFromDB(
+                            id
+                          );
+                          revalidatePath('/(admin)/bazer', 'page')
+                          return response;
+                        } catch (error) {
+                          throw new Error(error);
+                        }
+                      }

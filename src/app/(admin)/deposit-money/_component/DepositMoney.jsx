@@ -2,12 +2,12 @@
 import { depositInsertAction, depositUpdateAction } from "@/app/actions";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
-
-const DepositMoney = ({ persons, deposits : initialDeposits }) => {
+const DepositMoney = ({ persons, deposits: initialDeposits }) => {
   const [deposits, setDeposits] = useState(initialDeposits);
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const [newDeposit, setNewDeposit] = useState({
     personId: "",
     amount: "",
@@ -15,50 +15,50 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
     date: "",
   });
 
-  console.log(deposits)
+  console.log(deposits);
   const [editDeposit, setEditDeposit] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
-  const handleDeposit =async () => {
-    if (!newDeposit.personId || !newDeposit.amount || !newDeposit.date || !newDeposit.description) {
+  const handleDeposit = async () => {
+    if (
+      !newDeposit.personId ||
+      !newDeposit.amount ||
+      !newDeposit.date ||
+      !newDeposit.description
+    ) {
       toast.error("Please fill out all fields.");
       return;
     }
-
     if (editDeposit) {
-      // setDeposits(
-      //   deposits.map((deposit) =>
-      //     deposit.id === editDeposit.id
-      //       ? { ...editDeposit, ...newDeposit, amount: parseFloat(newDeposit.amount) }
-      //       : deposit
-      //   )
-      // );
-
-
+      setIsLoading(true);
       try {
-        const response = await depositUpdateAction( editDeposit.id,newDeposit);
+        const response = await depositUpdateAction(editDeposit.id, newDeposit);
         if (response.error) {
           toast.error(response.error);
         } else {
           toast.success("ADD added successfully!");
-          setNewRoommate({ name: "", phone: "" });// Clear the input field after adding
+          setNewRoommate({ name: "", phone: "" }); // Clear the input field after adding
         }
       } catch (err) {
         toast.error("Failed to add user. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
       setEditDeposit(null);
     } else {
       // setDeposits([
-
+      setIsLoading(true);
       try {
         const response = await depositInsertAction(newDeposit);
         if (response.error) {
           toast.error(response.error);
         } else {
           toast.success("ADD added successfully!");
-          setNewRoommate({ name: "", phone: "" });// Clear the input field after adding
+          setNewRoommate({ name: "", phone: "" }); // Clear the input field after adding
         }
       } catch (err) {
         toast.error("Failed to add user. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -75,13 +75,18 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
     setEditDeposit(deposit);
   };
 
+  if (isLoading) {
+    return <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+  }
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-center">Deposit System</h1>
 
       {/* Form */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4">{editDeposit ? "Update Deposit" : "Add Deposit"}</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          {editDeposit ? "Update Deposit" : "Add Deposit"}
+        </h2>
         <select
           value={newDeposit.personId}
           onChange={(e) =>
@@ -100,19 +105,25 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
           type="number"
           placeholder="Amount"
           value={newDeposit.amount}
-          onChange={(e) => setNewDeposit({ ...newDeposit, amount: e.target.value })}
+          onChange={(e) =>
+            setNewDeposit({ ...newDeposit, amount: e.target.value })
+          }
           className="w-full p-2 mb-4 border rounded-md"
         />
         <textarea
           placeholder="Description"
           value={newDeposit.description}
-          onChange={(e) => setNewDeposit({ ...newDeposit, description: e.target.value })}
+          onChange={(e) =>
+            setNewDeposit({ ...newDeposit, description: e.target.value })
+          }
           className="w-full p-2 mb-4 border rounded-md"
         />
         <input
           type="date"
           value={newDeposit.date}
-          onChange={(e) => setNewDeposit({ ...newDeposit, date: e.target.value })}
+          onChange={(e) =>
+            setNewDeposit({ ...newDeposit, date: e.target.value })
+          }
           className="w-full p-2 mb-4 border rounded-md"
         />
         <button
@@ -142,7 +153,10 @@ const DepositMoney = ({ persons, deposits : initialDeposits }) => {
                 <td className="p-2 border">{deposit.amount}</td>
                 <td className="p-2 border">{deposit.date}</td>
                 <td className="p-2 border">
-                  <button onClick={() => handleEdit(deposit)} className="text-blue-600">
+                  <button
+                    onClick={() => handleEdit(deposit)}
+                    className="text-blue-600"
+                  >
                     Edit
                   </button>
                 </td>
