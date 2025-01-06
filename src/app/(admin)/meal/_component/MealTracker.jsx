@@ -3,7 +3,7 @@ import { mealTrackerInsertAction, mealTrackerUpdateAction } from "@/app/actions"
 import Spinner from "@/componet/ui/Spinner";
 import React, { useState, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
-import dynamic from "next/dynamic";
+const dynamic = "force-dynamic";
 
 const MealTracker = ({ data: initialData , roommade }) => {
   const [data, setData] = useState(initialData);

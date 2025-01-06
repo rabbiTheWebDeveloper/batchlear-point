@@ -3,7 +3,7 @@ import { bazerInsertAction, bazerUpdateAction, otherCostInsertAction, otherCostU
 import Spinner from "@/componet/ui/Spinner";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import dynamic from "next/dynamic";
+const dynamic = "force-dynamic";
 
 const OtherCost = ({ initialBazaars }) => {
   const [bazaars, setBazaars] = useState(initialBazaars);

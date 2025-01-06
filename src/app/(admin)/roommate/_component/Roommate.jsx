@@ -3,6 +3,7 @@ import { roommateDeleteAction, roommateInsertAction, roommateUpdateAction } from
 import Spinner from "@/componet/ui/Spinner";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+const dynamic = "force-dynamic";
 
 const Roommate = ({ roommates}) => {
   const [newRoommate, setNewRoommate] = useState({ name: "", phone: "" });
