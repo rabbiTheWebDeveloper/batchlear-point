@@ -16,7 +16,7 @@ export default function Header() {
       >
         ☰
       </button>
-      <h1 className="text-lg font-bold">Batchlar Point</h1>
+      <h1 className="text-lg font-bold">Batchlar Point -(Beta version)</h1>
       <nav className="hidden md:block">
         <ul className="flex space-x-4">
           <li>
