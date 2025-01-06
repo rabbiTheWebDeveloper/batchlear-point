@@ -2,7 +2,7 @@
 
 import { FaUtensils, FaMoneyBillWave, FaShoppingCart, FaBalanceScale } from "react-icons/fa";
 import { MdAttachMoney, MdOutlinePendingActions } from "react-icons/md";
-const dynamic = "force-dynamic";
+
 
 
 export default function Dashboard({dashboardData}) {

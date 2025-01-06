@@ -2,7 +2,7 @@
 import { depositInsertAction, depositUpdateAction } from "@/app/actions";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-const dynamic = "force-dynamic";
+
 
 const DepositMoney = ({ persons, deposits: initialDeposits }) => {
   const [deposits, setDeposits] = useState(initialDeposits);
