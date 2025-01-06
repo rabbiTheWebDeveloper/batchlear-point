@@ -11,7 +11,7 @@ export const checkPermissionAndRedirect = async(permissions) => {
   const fullUrl = headersList.get('referer') || "";
   const [,pathname] = fullUrl.match( new RegExp(`https?:\/\/${domain}(.*)`))||[];
 
-  console.log("Current Path:", pathname);
+  // console.log("Current Path:", pathname);
 
   if (!permissions.includes(pathname)) {
     // console.error("Access Denied: You do not have permission to view this page.");

@@ -63,7 +63,7 @@ export async function updateOnBoarding(data) {
     // console.log("data", data);
     
     const user = await OnBoardingModel.findOne({ email: data.email });
-    console.log("user", user);
+    // console.log("user", user);
     if (user) {
       const updateUser = await OnBoardingModel.findOneAndUpdate(
         { email: data.email },

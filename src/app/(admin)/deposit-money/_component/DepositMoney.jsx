@@ -15,7 +15,7 @@ const DepositMoney = ({ persons, deposits: initialDeposits }) => {
     date: "",
   });
 
-  console.log(deposits);
+  // console.log(deposits);
   const [editDeposit, setEditDeposit] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
   const handleDeposit = async () => {

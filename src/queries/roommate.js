@@ -19,7 +19,7 @@ async function getAllFromDB() {
 // Function to update a specific meal in the database
  const updateOneInDB = async (mainId, updateData) => {
   await dbConnect();
-  console.log(updateData , mainId);
+  // console.log(updateData , mainId);
     const result = await RoommateModel.findOneAndUpdate({ _id: mainId }, updateData);
     return replaceMongoIdInObject(JSON.parse(JSON.stringify(result)));
 };

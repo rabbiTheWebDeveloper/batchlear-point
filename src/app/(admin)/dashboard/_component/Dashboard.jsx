@@ -24,7 +24,7 @@ export default function Dashboard({dashboardData}) {
           <FaMoneyBillWave className="text-green-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Cost</h2>
-            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.totalBazer}</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.totallCost}</p>
           </div>
         </div>
 

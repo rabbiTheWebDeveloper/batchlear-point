@@ -9,12 +9,12 @@ const page = async() => {
   try {
     data = await roommateQuery.getAllFromDB();  // Fetch data from DB
     deposite = await depositQuery.getAllFromDB(); 
-    console.log() // Fetch data from DB
+    // console.log() // Fetch data from DB
   } catch (error) {
     console.error("Error fetching data:", error);  // Add error logging for debugging
   }
 
-console.log(deposite)
+// console.log(deposite)
   return (
 
     <>

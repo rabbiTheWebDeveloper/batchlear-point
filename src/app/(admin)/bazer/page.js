@@ -14,7 +14,7 @@ const page = async() => {
     } catch (error) {
       console.error("Error fetching data:", error);  // Add error logging for debugging
     }
-    console.log(bazer)
+    // console.log(bazer)
   return (
     <>
       <Bazer people={data} initialBazaars={bazer}  />

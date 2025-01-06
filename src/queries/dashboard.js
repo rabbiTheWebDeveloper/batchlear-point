@@ -2,6 +2,7 @@ import { replaceMongoIdInObject } from "@/lib/convertData";
 import { BazertModel } from "@/model/bazer-model";
 import { DepositModel } from "@/model/deposit-money-model";
 import { MealTrackerModel } from "@/model/mealTracker-model";
+import { OtherCostModel } from "@/model/other-cost-model";
 import { dbConnect } from "@/service/mongo";
 
 async function getAllFromDB() {
@@ -36,6 +37,8 @@ async function getAllFromDB() {
     },
   }).lean();
 
+  const otherResult = await OtherCostModel.find({}).lean();
+
   // Summing the total deposit
   const totalDeposit = depositResult.reduce(
     (total, result) => total + result.amount,
@@ -43,11 +46,15 @@ async function getAllFromDB() {
   );
 
   // Summing the total cost from bazer result
-  const totalBazer = bazerResult.reduce(
+  const totalOtherCost = otherResult.reduce(
     (total, result) => total + result.cost,
     0
   );
 
+  const totalBazer = bazerResult.reduce(
+    (total, result) => total + result.cost,
+    0
+  );
   // Summing meal counts
   const totalMeals = mealsResult.reduce((total, deposit) => {
     const totalMealsCount = deposit.meals.reduce(
@@ -57,9 +64,11 @@ async function getAllFromDB() {
     return total + totalMealsCount; // Accumulate total meal counts
   }, 0);
   const mealCharge = totalBazer / totalMeals;
+  const totallCost = totalBazer + totalOtherCost;
+
   // Return the final result
   return JSON.parse(
-    JSON.stringify({ totalMeals, totalDeposit, totalBazer, mealCharge })
+    JSON.stringify({ totalMeals,totallCost, totalDeposit, totalBazer, mealCharge })
   );
 }
 

@@ -62,7 +62,7 @@ const Signin = () => {
         return { success: true };
       }
       // Handle successful login
-      console.log("Login successful:", data);
+      // console.log("Login successful:", data);
       // Redirect to another page, e.g., dashboard
       // router.push("/dashboard");
     } catch (error) {

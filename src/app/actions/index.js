@@ -58,7 +58,7 @@ export async function userUpdatePassword(formData) {
 
 export async function updateNote(formData) {
   try {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     const response = await updateOnBoarding(formData);
     return response;
   } catch (error) {
@@ -76,7 +76,7 @@ export default async function actionBanner() {
 }
 
 export async function updateOnBoardingDetailsAction(id, updateData) {
-  console.log("updateData action", id, updateData);
+  // console.log("updateData action", id, updateData);
 
   try {
     const response = await updateOnBoardingDetailsQuery(id, updateData);
@@ -92,7 +92,7 @@ export async function getOnBoardingBySpecificStatusAndDateAction(
   searchParam,
   creationDate
 ) {
-  console.log("status action", status);
+  // console.log("status action", status);
 
   try {
     const response = await getOnBoardingBySpecificStatusAndDate(
@@ -112,7 +112,7 @@ export async function getAffiliationBySpecificStatusAndDateAction(
   searchParam,
   creationDate
 ) {
-  console.log("status action", status);
+  // console.log("status action", status);
 
   try {
     const response = await getAffiliationBySpecificStatusAndDate(
@@ -179,7 +179,7 @@ export async function mealTrackerInsertAction(
     export async function roommateInsertAction(
       data
       ) {
-        console.log("data", data);
+        // console.log("data", data);
         try {
           const response = await roommateQuery.insertIntoDB(
             data

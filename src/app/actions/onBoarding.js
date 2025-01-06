@@ -4,7 +4,7 @@ import { updateOnBoarding, updateOnBoardingDetailsQuery } from "@/queries/onBoar
 
 async function updateNote(formData) {
   try {
-    console.log("formData", formData);
+    // console.log("formData", formData);
     const response = await updateOnBoarding(formData);
     return response;
   } catch (error) {

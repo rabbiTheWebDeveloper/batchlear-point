@@ -13,7 +13,7 @@ const page = async() => {
     } catch (error) {
       console.error("Error fetching data:", error);  // Add error logging for debugging
     }
-    console.log(otherCost)
+    // console.log(otherCost)
   return (
     <>
       <OtherCost  initialBazaars={otherCost}  />

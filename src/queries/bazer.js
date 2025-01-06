@@ -48,7 +48,7 @@ const insertIntoDB = async (data) => {
 // Function to update a specific meal in the database
 const updateOneInDB = async (mainId, updateData) => {
   await dbConnect();
-  console.log(updateData, mainId);
+  // console.log(updateData, mainId);
   const result = await BazertModel.findOneAndUpdate(
     { _id: mainId },
     updateData
