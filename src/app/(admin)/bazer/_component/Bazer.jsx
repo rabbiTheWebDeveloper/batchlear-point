@@ -3,7 +3,7 @@ import { bazerInsertAction, bazerUpdateAction } from "@/app/actions";
 import Spinner from "@/componet/ui/Spinner";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic'
 
 const Bazer = ({ people, initialBazaars }) => {
   const [bazaars, setBazaars] = useState(initialBazaars);
