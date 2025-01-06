@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from './_component/Dashboard';
 import { dashboardQuery } from '@/queries/dashboard';
+import dynamic from "next/dynamic";
 
 const page = async() => {
    let data = {};
