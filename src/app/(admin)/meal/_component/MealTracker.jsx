@@ -1,5 +1,6 @@
 "use client";
 import { mealTrackerInsertAction, mealTrackerUpdateAction } from "@/app/actions";
+import Spinner from "@/componet/ui/Spinner";
 import React, { useState, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 
@@ -11,6 +12,7 @@ const MealTracker = ({ data: initialData }) => {
   const [mealDetails, setMealDetails] = useState("");
   const [mealDay, setMealDay] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Open modal with the selected meal's data
   const openModal = useCallback((personIndex, dayIndex) => {
@@ -31,6 +33,7 @@ const MealTracker = ({ data: initialData }) => {
   // Save meal update to the backend
   const saveMeal = async () => {
     if (selectedDay) {
+      setIsLoading(true);
       const { personIndex, dayIndex } = selectedDay;
       const meal = data[personIndex].meals[dayIndex];
       const id = data[personIndex].id;
@@ -48,6 +51,8 @@ const MealTracker = ({ data: initialData }) => {
         closeModal();
       } catch (error) {
         toast.error("Failed to update meal. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -58,7 +63,7 @@ const MealTracker = ({ data: initialData }) => {
       toast.error("Please enter a valid name.");
       return;
     }
-
+    setIsLoading(true);
     try {
       const response = await mealTrackerInsertAction({ name: newUserName });
       if (response.error) {
@@ -69,6 +74,8 @@ const MealTracker = ({ data: initialData }) => {
       }
     } catch (err) {
       toast.error("Failed to add user. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -80,7 +87,7 @@ useEffect(() => {
 }, []);
 
 if (!isClient) {
-  return null; // or a loading spinner, etc.
+  return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
 }
 
   return (
