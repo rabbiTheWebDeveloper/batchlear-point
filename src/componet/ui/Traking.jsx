@@ -33,30 +33,44 @@ const MealTracker = ({ data: initialData , roommade }) => {
 
   // Save meal update to the backend
   const saveMeal = async () => {
-    if (selectedDay) {
-      setIsLoading(true);
-      const { personIndex, dayIndex } = selectedDay;
-      const meal = data[personIndex].meals[dayIndex];
-      const id = data[personIndex].id;
-
-      try {
-        const response = await mealTrackerUpdateAction(id, meal._id, mealCount, mealDetails);
-        if (response.error) {
-          toast.error(response.error);
-        } else {
-          toast.success("Meal updated successfully!");
-          const updatedData = [...data];
+    if (!selectedDay) return; // Early return if no day is selected
+  
+    setIsLoading(true);
+  
+    const { personIndex, dayIndex } = selectedDay;
+    const meal = data[personIndex]?.meals[dayIndex]; // Use optional chaining to avoid errors
+    const personId = data[personIndex]?.id; // Safely access person ID
+  
+    if (!meal || !personId) {
+      toast.error("Invalid data. Please refresh the page and try again.");
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      // Call the update API
+      const response = await mealTrackerUpdateAction(personId, meal._id, mealCount, mealDetails);
+  
+      if (response.error) {
+        toast.error(response.error || "An unknown error occurred."); // Show a user-friendly error message
+      } else {
+        // Update the UI optimistically
+        toast.success("Meal updated successfully!");
+        setData(prevData => {
+          const updatedData = [...prevData];
           updatedData[personIndex].meals[dayIndex] = { ...meal, count: mealCount, details: mealDetails };
-          setData(updatedData); // Optimistically update the UI
-        }
-        closeModal();
-      } catch (error) {
-        toast.error("Failed to update meal. Please try again.");
-      } finally {
-        setIsLoading(false);
+          return updatedData;
+        });
+        closeModal(); // Close the modal after success
       }
+    } catch (error) {
+      console.error("Meal update failed:", error); // Log the error for debugging
+      toast.error("Failed to update meal. Please try again.");
+    } finally {
+      setIsLoading(false); // Ensure loading state is reset
     }
   };
+  
 
   // Add a new user
   const addUser = async () => {
@@ -190,49 +204,64 @@ if (!isClient || isLoading) {
 
       {/* Modal for Meal Update */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h3 className="text-lg font-semibold mb-4">Update Meal</h3>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">
-                Meal Count-{mealDay.name}
-              </label>
-              <label className="block text-sm font-medium mb-2">
-                Day - {mealDay.day}
-              </label>
-              <input
-                type="number"
-                value={mealCount}
-                onChange={(e) => setMealCount(Number(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                min="0"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Details</label>
-              <textarea
-                value={mealDetails}
-                onChange={(e) => setMealDetails(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                rows="3"
-              />
-            </div>
-            <div className="flex justify-between">
-              <button
-                onClick={saveMeal}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md"
-              >
-                Save
-              </button>
-              <button
-                onClick={closeModal}
-                className="bg-gray-600 text-white px-4 py-2 rounded-md"
-              >
-                Close
-              </button>
-            </div>
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+        <h3 className="text-lg font-semibold mb-4">Update Meal</h3>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">
+            Meal Count - {mealDay.name}
+          </label>
+          <label className="block text-sm font-medium mb-2">
+            Day - {mealDay.day}
+          </label>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setMealCount(prev => Math.max(prev - 1, 0))} // Decrease meal count, not going below 0
+              className="px-2 py-1 bg-gray-300 text-gray-600 rounded-md"
+            >
+              -
+            </button>
+            <input
+              type="number"
+              value={mealCount}
+              onChange={(e) => setMealCount(Math.max(0, Number(e.target.value)))}
+              className="w-full p-2 border border-gray-300 rounded-md text-center"
+              min="0"
+            />
+            <button
+              onClick={() => setMealCount(prev => prev + 1)} // Increase meal count
+              className="px-2 py-1 bg-gray-300 text-gray-600 rounded-md"
+            >
+              +
+            </button>
           </div>
         </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Details</label>
+          <textarea
+            value={mealDetails}
+            onChange={(e) => setMealDetails(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            rows="3"
+          />
+        </div>
+        <div className="flex justify-between">
+          <button
+            onClick={saveMeal}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Save
+          </button>
+          <button
+            onClick={closeModal}
+            className="bg-gray-600 text-white px-4 py-2 rounded-md"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+    
       )}
     </div>
   );
