@@ -34,30 +34,44 @@ const MealTracker = ({ data: initialData , roommade }) => {
 
   // Save meal update to the backend
   const saveMeal = async () => {
-    if (selectedDay) {
-      setIsLoading(true);
-      const { personIndex, dayIndex } = selectedDay;
-      const meal = data[personIndex].meals[dayIndex];
-      const id = data[personIndex].id;
-
-      try {
-        const response = await mealTrackerUpdateAction(id, meal._id, mealCount, mealDetails);
-        if (response.error) {
-          toast.error(response.error);
-        } else {
-          toast.success("Meal updated successfully!");
-          const updatedData = [...data];
+    if (!selectedDay) return; // Early return if no day is selected
+  
+    setIsLoading(true);
+  
+    const { personIndex, dayIndex } = selectedDay;
+    const meal = data[personIndex]?.meals[dayIndex]; // Use optional chaining to avoid errors
+    const personId = data[personIndex]?.id; // Safely access person ID
+  
+    if (!meal || !personId) {
+      toast.error("Invalid data. Please refresh the page and try again.");
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      // Call the update API
+      const response = await mealTrackerUpdateAction(personId, meal._id, mealCount, mealDetails);
+  
+      if (response.error) {
+        toast.error(response.error || "An unknown error occurred."); // Show a user-friendly error message
+      } else {
+        // Update the UI optimistically
+        toast.success("Meal updated successfully!");
+        setData(prevData => {
+          const updatedData = [...prevData];
           updatedData[personIndex].meals[dayIndex] = { ...meal, count: mealCount, details: mealDetails };
-          setData(updatedData); // Optimistically update the UI
-        }
-        closeModal();
-      } catch (error) {
-        toast.error("Failed to update meal. Please try again.");
-      } finally {
-        setIsLoading(false);
+          return updatedData;
+        });
+        closeModal(); // Close the modal after success
       }
+    } catch (error) {
+      console.error("Meal update failed:", error); // Log the error for debugging
+      toast.error("Failed to update meal. Please try again.");
+    } finally {
+      setIsLoading(false); // Ensure loading state is reset
     }
   };
+  
 
   // Add a new user
   const addUser = async () => {
