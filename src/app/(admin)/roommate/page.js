@@ -1,6 +1,7 @@
 import React from 'react';
 import Roommate from './_component/Roommate';
 import { roommateQuery } from '@/queries/roommate';
+export const dynamic = 'force-dynamic'
 
 const page =async () => {
   let data = [];

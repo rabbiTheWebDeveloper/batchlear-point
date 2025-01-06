@@ -2,6 +2,7 @@ import React from 'react';
 import Bazer from './_component/Bazer';
 import { roommateQuery } from '@/queries/roommate';
 import { bazerQuery } from '@/queries/bazer';
+export const dynamic = 'force-dynamic'
 
 const page = async() => {
 

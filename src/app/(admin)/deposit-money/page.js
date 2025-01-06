@@ -2,6 +2,7 @@ import React from 'react';
 import DepositMoney from './_component/DepositMoney';
 import { roommateQuery } from '@/queries/roommate';
 import { depositQuery } from '@/queries/deposit-money';
+export const dynamic = 'force-dynamic'
 
 const page = async() => {
   let data = [];
