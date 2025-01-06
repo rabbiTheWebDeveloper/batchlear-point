@@ -83,9 +83,9 @@ const MealTracker = ({ data: initialData , roommade }) => {
 
   const [isClient, setIsClient] = useState(false);
 
-useEffect(() => {
-  setIsClient(true);
-}, []);
+// useEffect(() => {
+//   setIsClient(true);
+// }, []);
 
 if (!isClient || isLoading) {
   return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
