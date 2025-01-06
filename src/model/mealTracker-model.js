@@ -15,10 +15,10 @@ const getCurrentMonth = () => {
 
 const mealTrackerSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
+   personId: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: "Roommate",
+   },
     month: {
       type: String,
       required: true, // Format: "YYYY-MM" (e.g., "2025-01")

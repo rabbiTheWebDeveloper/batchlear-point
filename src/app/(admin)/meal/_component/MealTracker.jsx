@@ -4,7 +4,7 @@ import Spinner from "@/componet/ui/Spinner";
 import React, { useState, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
 
-const MealTracker = ({ data: initialData }) => {
+const MealTracker = ({ data: initialData , roommade }) => {
   const [data, setData] = useState(initialData);
   const [newUserName, setNewUserName] = useState("");
   const [selectedDay, setSelectedDay] = useState(null);
@@ -13,6 +13,7 @@ const MealTracker = ({ data: initialData }) => {
   const [mealDay, setMealDay] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(""); 
 
   // Open modal with the selected meal's data
   const openModal = useCallback((personIndex, dayIndex) => {
@@ -59,13 +60,13 @@ const MealTracker = ({ data: initialData }) => {
 
   // Add a new user
   const addUser = async () => {
-    if (!newUserName.trim()) {
+    if (!selectedUser) {
       toast.error("Please enter a valid name.");
       return;
     }
     setIsLoading(true);
     try {
-      const response = await mealTrackerInsertAction({ name: newUserName });
+      const response = await mealTrackerInsertAction({ personId: selectedUser });
       if (response.error) {
         toast.error(response.error);
       } else {
@@ -100,13 +101,18 @@ if (!isClient || isLoading) {
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
         <h2 className="text-lg font-semibold mb-4">Add User</h2>
         <div className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Enter user name"
-            value={newUserName}
-            onChange={(e) => setNewUserName(e.target.value)}
+        <select
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
             className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400 text-sm md:text-base"
-          />
+          >
+            <option value="">Select an existing user</option>
+            {roommade.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
           <button
             onClick={addUser}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
@@ -146,7 +152,7 @@ if (!isClient || isLoading) {
                 className="hover:bg-gray-100 transition-colors"
               >
                 <td className="p-2 border border-gray-300 font-medium text-sm md:text-base whitespace-nowrap">
-                  {person.name}
+                  {person?.person?.name}
                 </td>
                 {person.meals.map((meal, dayIndex) => (
                   <td
@@ -173,7 +179,7 @@ if (!isClient || isLoading) {
         <ul className="space-y-2">
           {data.map((person, index) => (
             <li key={index} className="flex justify-between bg-gray-100 p-2 rounded-md">
-              <span className="font-medium">{person.name}</span>
+              <span className="font-medium">{person?.person?.name}</span>
               <span className="font-bold text-blue-600">
                 {person.meals.reduce((sum, meal) => sum + meal.count, 0)}
               </span>

@@ -4,9 +4,37 @@ import { dbConnect } from "@/service/mongo";
 
 export async function getAllFromDB() {
   await dbConnect();
-  const result = await MealTrackerModel.find({}).lean();
-  return replaceMongoIdInArray(JSON.parse(JSON.stringify(result)));
+  const result = await MealTrackerModel.find({})    .populate({
+    path: "personId", // Reference field in the schema
+    select: "name phone", // Include these fields from the Roommate model
+  }).lean();
+  const finalResult = result.map(deposit => ({
+    ...deposit,
+    person: deposit.personId, // Move populated data to a `person` field
+    personId: deposit.personId?._id || deposit.personId, // Keep the original ID
+  }));
+  return replaceMongoIdInArray(JSON.parse(JSON.stringify(finalResult)));
 }
+
+// async function getAllFromDB() {
+//   await dbConnect();
+
+//   const result = await BazertModel.find({})
+//     .populate({
+//       path: "personId", // Reference field in the schema
+//       select: "name phone", // Include these fields from the Roommate model
+//     })
+//     .lean();
+
+//   // Add a `person` field while keeping the `personId` as is
+//   const finalResult = result.map(deposit => ({
+//     ...deposit,
+//     person: deposit.personId, // Move populated data to a `person` field
+//     personId: deposit.personId?._id || deposit.personId, // Keep the original ID
+//   }));
+//   return replaceMongoIdInArray(JSON.parse(JSON.stringify(finalResult)));
+// }
+
 
 export const insertIntoDB = async (data) => {
   await dbConnect();
@@ -18,11 +46,7 @@ export const insertIntoDB = async (data) => {
 // Function to update a specific meal in the database
 export const updateOneInDB = async (mainId, mealId, count, details) => {
   try {
-    console.log('Updating ' + mainId + ' ' + mealId + ' ' + count + ' ' + details);
-    // Prepare the filter to find the meal by `mainId` (user) and `mealId` (specific meal day)
     const filter = { _id: mainId, 'meals._id': mealId };
-
-    // Prepare the update data to change `count` and `details` for the specific meal
     const updateData = {
       $set: {
         'meals.$.count': count,    // Update meal count
