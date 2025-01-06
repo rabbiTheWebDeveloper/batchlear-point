@@ -15,7 +15,7 @@ export default function Dashboard({dashboardData}) {
           <FaUtensils className="text-blue-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Meal</h2>
-            <p className="text-gray-600 text-xl font-bold">{dashboardData.totalMeals}</p>
+            <p className="text-gray-600 text-xl font-bold"> {dashboardData.totalMeals}</p>
           </div>
         </div>
 
@@ -24,7 +24,7 @@ export default function Dashboard({dashboardData}) {
           <FaMoneyBillWave className="text-green-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Cost</h2>
-            <p className="text-gray-600 text-xl font-bold">৳{dashboardData.totalBazer}</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.totalBazer}</p>
           </div>
         </div>
 
@@ -33,7 +33,7 @@ export default function Dashboard({dashboardData}) {
           <FaShoppingCart className="text-yellow-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Bazar</h2>
-            <p className="text-gray-600 text-xl font-bold">৳{dashboardData.totalBazer}</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.totalBazer}</p>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ export default function Dashboard({dashboardData}) {
           <FaBalanceScale className="text-purple-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Meal Charge</h2>
-            <p className="text-gray-600 text-xl font-bold">৳{dashboardData.mealCharge}/meal</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.mealCharge}/meal</p>
           </div>
         </div>
 
@@ -51,7 +51,7 @@ export default function Dashboard({dashboardData}) {
           <MdAttachMoney className="text-red-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Given</h2>
-            <p className="text-gray-600 text-xl font-bold">৳{dashboardData.totalDeposit}</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.totalDeposit}</p>
           </div>
         </div>
 
@@ -60,7 +60,7 @@ export default function Dashboard({dashboardData}) {
           <MdOutlinePendingActions className="text-indigo-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Due</h2>
-            <p className="text-gray-600 text-xl font-bold">৳00</p>
+            <p className="text-gray-600 text-xl font-bold">৳ 00</p>
           </div>
         </div>
       </div>
