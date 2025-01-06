@@ -42,7 +42,7 @@ export default function Dashboard({dashboardData}) {
           <FaBalanceScale className="text-purple-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Meal Charge</h2>
-            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.mealCharge}/meal</p>
+            <p className="text-gray-600 text-xl font-bold">৳ {dashboardData.mealCharge.toFixed(2)}/meal</p>
           </div>
         </div>
 
