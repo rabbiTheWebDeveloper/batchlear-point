@@ -200,13 +200,27 @@ const MealTracker = ({ data: initialData , roommade }) => {
               <label className="block text-sm font-medium mb-2">
                 Day - {mealDay.day}
               </label>
-              <input
-                type="number"
-                value={mealCount}
-                onChange={(e) => setMealCount(Number(e.target.value))}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                min="0"
-              />
+              <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setMealCount(prev => Math.max(prev - 1, 0))} // Decrease meal count, not going below 0
+              className="px-2 py-1 bg-gray-300 text-gray-600 rounded-md"
+            >
+              -
+            </button>
+            <input
+              type="number"
+              value={mealCount}
+              onChange={(e) => setMealCount(Math.max(0, Number(e.target.value)))}
+              className="w-full p-2 border border-gray-300 rounded-md text-center"
+              min="0"
+            />
+            <button
+              onClick={() => setMealCount(prev => prev + 1)} // Increase meal count
+              className="px-2 py-1 bg-gray-300 text-gray-600 rounded-md"
+            >
+              +
+            </button>
+          </div>
             </div>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Details</label>
