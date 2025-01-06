@@ -40,24 +40,37 @@ export const insertIntoDB = async (data) => {
 // Function to update a specific meal in the database
 export const updateOneInDB = async (mainId, mealId, count, details) => {
   try {
-    const filter = { _id: mainId, 'meals._id': mealId };
+    // Ensure input parameters are valid
+    if (!mainId || !mealId || count == null || details == null) {
+      throw new Error("Invalid input parameters");
+    }
+
+    // Construct filter and update in a streamlined manner
+    const filter = { _id: mainId, "meals._id": mealId };
     const updateData = {
       $set: {
-        'meals.$.count': count,    // Update meal count
-        'meals.$.details': details, // Update meal details
+        "meals.$.count": count,       // Update meal count
+        "meals.$.details": details,  // Update meal details
       },
     };
 
-    // Update the document in the DB
-    const result = await MealTrackerModel.updateOne(filter, updateData);
+    // Use lean query if only update status is required
+    const options = { new: true }; // Option for MongoDB to return the updated document
 
-    // Return the result after the update
-    return result;
+    // Perform the update
+    const result = await MealTrackerModel.updateOne(filter, updateData, options);
+
+    if (result.matchedCount === 0) {
+      throw new Error("No matching record found to update");
+    }
+
+    return { success: true, updated: result.modifiedCount > 0 };
   } catch (error) {
-    console.error("Error updating record in DB:", error);
-    throw error;
+    console.error("Error updating record in DB:", error.message);
+    throw new Error("Database update failed. Please try again.");
   }
 };
+
 
 
 export const mealTrackerQuery = {
