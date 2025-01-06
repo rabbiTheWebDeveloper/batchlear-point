@@ -18,7 +18,7 @@ const MealTracker = ({ data: initialData , roommade }) => {
   // Open modal with the selected meal's data
   const openModal = useCallback((personIndex, dayIndex) => {
     const mealData = data[personIndex].meals[dayIndex];
-    const userName = data[personIndex].name;
+    const userName = data[personIndex].person.name;
     setSelectedDay({ personIndex, dayIndex });
     setMealCount(mealData.count);
     setMealDetails(mealData.details);
