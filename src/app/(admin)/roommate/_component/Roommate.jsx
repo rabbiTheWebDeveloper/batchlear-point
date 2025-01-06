@@ -1,5 +1,6 @@
 "use client";
 import { roommateDeleteAction, roommateInsertAction, roommateUpdateAction } from "@/app/actions";
+import Spinner from "@/componet/ui/Spinner";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -7,6 +8,7 @@ const Roommate = ({ roommates}) => {
   const [newRoommate, setNewRoommate] = useState({ name: "", phone: "" });
   const [editIndex, setEditIndex] = useState(null);
   const [editId, setEditId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,6 +19,7 @@ const Roommate = ({ roommates}) => {
     if (newRoommate.name && newRoommate.phone) {
       if (editIndex !== null) {
         try {
+          setIsLoading(true);
           const response = await roommateUpdateAction(editId ,{ name: newRoommate.name, phone: newRoommate.phone });
           if (response.error) {
             toast.error(response.error);
@@ -26,12 +29,15 @@ const Roommate = ({ roommates}) => {
           }
         } catch (err) {
           toast.error("Failed to add user. Please try again.");
+        }finally {
+          setIsLoading(false);
         }
 
         setEditIndex(null);
       } else {
 
         try {
+          setIsLoading(true);
           const response = await roommateInsertAction({ name: newRoommate.name, phone: newRoommate.phone });
           if (response.error) {
             toast.error(response.error);
@@ -41,6 +47,8 @@ const Roommate = ({ roommates}) => {
           }
         } catch (err) {
           toast.error("Failed to add user. Please try again.");
+        }finally {
+          setIsLoading(false);
         }
       }
       setNewRoommate({ name: "", phone: "" });
@@ -49,6 +57,7 @@ const Roommate = ({ roommates}) => {
 
   const deleteRoommate =async (id) => {
     try {
+      setIsLoading(true);
       const response = await roommateDeleteAction(id);
       if (response.error) {
         toast.error(response.error);
@@ -57,6 +66,8 @@ const Roommate = ({ roommates}) => {
       }
     } catch (err) {
       toast.error("Failed to add user. Please try again.");
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +85,9 @@ useEffect(() => {
 if (!isClient) {
   return null; // or a loading spinner, etc.
 }
-console.log("roommates", roommates);
+if ( isLoading) {
+  return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+}
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Roommate Manager</h1>

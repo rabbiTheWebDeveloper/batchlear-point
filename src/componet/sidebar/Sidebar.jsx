@@ -39,7 +39,11 @@ export default function Sidebar() {
               Bazar
             </Link>
           </li>
-
+          <li>
+            <Link href="/other-cost" className="block p-2 hover:bg-gray-700 rounded">
+              Other Cost
+            </Link>
+          </li>
           <li>
             <Link
               href="/deposit-money"

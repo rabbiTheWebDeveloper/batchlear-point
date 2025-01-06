@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Responsive App",
-  description: "A responsive and well-structured Next.js layout.",
+  title: "Bachelor Manager",
+  description: "A simple app to manage your bachelor life",
 };
 
 export default function RootLayout({ children }) {

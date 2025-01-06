@@ -11,6 +11,7 @@ import {
   updateOnBoarding,
   updateOnBoardingDetailsQuery,
 } from "@/queries/onBoarding";
+import { otherCostQuery } from "@/queries/other-cost";
 import { createProductDB, deleteProduct } from "@/queries/product";
 import { roommateQuery } from "@/queries/roommate";
 // import { updateSetting } from "@/queries/setting";
@@ -326,3 +327,54 @@ export async function mealTrackerInsertAction(
                           throw new Error(error);
                         }
                       }
+
+
+
+                      export async function otherCostInsertAction(
+                        data
+                        ) {
+                         
+                          try {
+                            const response = await otherCostQuery.insertIntoDB(
+                              data
+                            );
+                            revalidatePath('/(admin)/other-cost', 'page')
+                            return response;
+                          } catch (error) {
+                            throw new Error(error);
+                          }
+                        }
+                      
+                  
+                        export async function otherCostUpdateAction(
+                          id,
+                          data
+                          ) {
+                            // console.log("data", data);
+                            try {
+                              const response = await otherCostQuery.updateOneInDB(
+                                id,
+                                data
+                              );
+                              revalidatePath('/(admin)/other-cost', 'page')
+                              return response;
+                            } catch (error) {
+                              throw new Error(error);
+                            }
+                          }
+                  
+                  
+                          export async function otherCostDeleteAction(
+                            id
+                            ) {
+                              // console.log("data", data);
+                              try {
+                                const response = await otherCostQuery.deleteByIdFromDB(
+                                  id
+                                );
+                                revalidatePath('/(admin)/other-cost', 'page')
+                                return response;
+                              } catch (error) {
+                                throw new Error(error);
+                              }
+                            }
