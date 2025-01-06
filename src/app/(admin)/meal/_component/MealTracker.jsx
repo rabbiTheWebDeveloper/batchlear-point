@@ -9,14 +9,17 @@ const MealTracker = ({ data: initialData }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [mealCount, setMealCount] = useState(0);
   const [mealDetails, setMealDetails] = useState("");
+  const [mealDay, setMealDay] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Open modal with the selected meal's data
   const openModal = useCallback((personIndex, dayIndex) => {
     const mealData = data[personIndex].meals[dayIndex];
+    const userName = data[personIndex].name;
     setSelectedDay({ personIndex, dayIndex });
     setMealCount(mealData.count);
     setMealDetails(mealData.details);
+    setMealDay({day: mealData.day ,name: userName});
     setIsModalOpen(true);
   }, [data]);
 
@@ -179,10 +182,10 @@ if (!isClient) {
             <h3 className="text-lg font-semibold mb-4">Update Meal</h3>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">
-                Meal Count
+                Meal Count-{mealDay.name}
               </label>
               <label className="block text-sm font-medium mb-2">
-                Day - {mealDetails}
+                Day - {mealDay.day}
               </label>
               <input
                 type="number"
