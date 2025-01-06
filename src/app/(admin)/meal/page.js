@@ -2,7 +2,7 @@ import React from "react";
 import { getAllFromDB, mealTrackerQuery } from "@/queries/mealTracker";
 import MealTracker from "./_component/MealTracker";
 import { roommateQuery } from "@/queries/roommate";
-import dynamic from 'next/dynamic';
+const dynamic = "force-dynamic";
 
 // const MealTracker = dynamic(() => import("./_component/MealTracker"), { ssr: false });
 
