@@ -2,17 +2,14 @@ import { replaceMongoIdInArray, replaceMongoIdInObject } from "@/lib/convertData
 import { MealTrackerModel } from "@/model/mealTracker-model";
 import { dbConnect } from "@/service/mongo";
 
-export async function getAllFromDB() {
+export async function getAllFromDB(month = new Date().getMonth() + 1, year = new Date().getFullYear()) {
   await dbConnect();
 
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1); // Set to the first day of the current month
-  startOfMonth.setHours(0, 0, 0, 0); // Set to midnight
+// Start of the month
+const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0, 0);
 
-  const endOfMonth = new Date();
-  endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Go to the next month
-  endOfMonth.setDate(0); // Set to the last day of the current month
-  endOfMonth.setHours(23, 59, 59, 999); // Set to just before midnight
+// End of the month
+const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
 
   const result = await MealTrackerModel.find({    createdAt: {
     $gte: startOfMonth, // Greater than or equal to the first day of this month

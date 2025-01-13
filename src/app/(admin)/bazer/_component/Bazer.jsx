@@ -1,13 +1,18 @@
 "use client";
-import { bazerInsertAction, bazerUpdateAction } from "@/app/actions";
+import {
+  bazerGetListAction,
+  bazerInsertAction,
+  bazerUpdateAction,
+} from "@/app/actions";
 import Spinner from "@/componet/ui/Spinner";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-
 
 const Bazer = ({ people, initialBazaars }) => {
   const [bazaars, setBazaars] = useState(initialBazaars);
+  const [filteredBazaars, setFilteredBazaars] = useState(initialBazaars);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
   const [newBazar, setNewBazar] = useState({
     personId: "",
     cost: "",
@@ -15,14 +20,47 @@ const Bazer = ({ people, initialBazaars }) => {
     date: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const itemsPerPage = 25;
 
-  // Add or Update Bazar
+  // Automatically fetch the current month's data
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Get month (1-based)
+    const currentYear = currentDate.getFullYear(); // Get year
+    const defaultDate = `${currentYear}-${currentMonth}`; // Format as "YYYY-MM"
+    setSelectedDate(defaultDate); // Set default month and year in state
+    handleDateFilter(defaultDate); // Fetch data for the current month and year
+  }, []);
+
+  const handleDateFilter = async (date) => {
+    setSelectedDate(date);
+    if (!date) {
+      setFilteredBazaars(bazaars); // Show all bazaars if no date selected
+      return;
+    }
+
+    const [year, month] = date.split("-");
+    setIsLoading(true); // Show loading spinner while fetching data
+    try {
+      if (month) {
+        const response = await bazerGetListAction(month, year);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setFilteredBazaars(response); // Update filteredBazaars with fetched data
+        }
+      }
+    } catch (err) {
+      toast.error("Failed to fetch data. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading spinner
+    }
+  };
+
   const handleAddOrUpdateBazar = async () => {
     setIsLoading(true);
     try {
       if (newBazar.id) {
-        // Update existing bazar
         const response = await bazerUpdateAction(newBazar.id, newBazar);
         if (response.error) {
           toast.error(response.error);
@@ -31,7 +69,6 @@ const Bazer = ({ people, initialBazaars }) => {
           setNewBazar({ personId: "", cost: "", description: "", date: "" });
         }
       } else {
-        // Add new bazar
         const response = await bazerInsertAction(newBazar);
         if (response.error) {
           toast.error(response.error);
@@ -47,10 +84,12 @@ const Bazer = ({ people, initialBazaars }) => {
     }
   };
 
-  // Pagination logic
   const indexOfLastBazar = currentPage * itemsPerPage;
   const indexOfFirstBazar = indexOfLastBazar - itemsPerPage;
-  const currentBazaars = bazaars.slice(indexOfFirstBazar, indexOfLastBazar);
+  const currentBazaars = filteredBazaars.slice(
+    indexOfFirstBazar,
+    indexOfLastBazar
+  );
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -126,13 +165,29 @@ const Bazer = ({ people, initialBazaars }) => {
 
       {/* Bazar List */}
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-xl font-semibold mb-4">Bazar List</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Bazar List</h2>
+          {/* Month Filter Dropdown */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-2">
+              Filter by Month and Year:
+            </label>
+            <input
+              type="month" // "month" input to select month and year
+              value={selectedDate}
+              onChange={(e) => handleDateFilter(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md w-60"
+            />
+          </div>
+        </div>
         <table className="w-full table-auto border-collapse border border-gray-200">
           <thead>
             <tr className="bg-blue-600 text-white">
               <th className="p-2 border border-blue-500 text-left">Name</th>
               <th className="p-2 border border-blue-500 text-left">Cost</th>
-              <th className="p-2 border border-blue-500 text-left">Description</th>
+              <th className="p-2 border border-blue-500 text-left">
+                Description
+              </th>
               <th className="p-2 border border-blue-500 text-left">Date</th>
               <th className="p-2 border border-blue-500 text-left">Actions</th>
             </tr>
@@ -144,7 +199,9 @@ const Bazer = ({ people, initialBazaars }) => {
                   {people.find((person) => person.id === bazar.personId)?.name}
                 </td>
                 <td className="p-2 border border-gray-300">{bazar.cost}</td>
-                <td className="p-2 border border-gray-300">{bazar.description}</td>
+                <td className="p-2 border border-gray-300">
+                  {bazar.description}
+                </td>
                 <td className="p-2 border border-gray-300">{bazar.date}</td>
                 <td className="p-2 border border-gray-300">
                   <button
@@ -172,7 +229,7 @@ const Bazer = ({ people, initialBazaars }) => {
         <span className="mx-4 self-center text-lg">{currentPage}</span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage * itemsPerPage >= bazaars.length}
+          disabled={currentPage * itemsPerPage >= filteredBazaars.length}
           className="p-2 bg-gray-300 rounded-md hover:bg-gray-400 disabled:opacity-50"
         >
           Next

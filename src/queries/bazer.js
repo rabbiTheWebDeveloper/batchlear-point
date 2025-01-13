@@ -7,21 +7,22 @@ import { DepositModel } from "@/model/deposit-money-model";
 
 import { dbConnect } from "@/service/mongo";
 
-async function getAllFromDB() {
+async function getAllFromDB(month = new Date().getMonth() + 1, year = new Date().getFullYear()) {
   await dbConnect();
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1); // Set to the first day of the current month
-  startOfMonth.setHours(0, 0, 0, 0); // Set to midnight
 
-  const endOfMonth = new Date();
-  endOfMonth.setMonth(endOfMonth.getMonth() + 1); // Go to the next month
-  endOfMonth.setDate(0); // Set to the last day of the current month
-  endOfMonth.setHours(23, 59, 59, 999); // Set to just before midnight
 
-  const result = await BazertModel.find({    createdAt: {
-    $gte: startOfMonth, // Greater than or equal to the first day of this month
-    $lt: endOfMonth,    // Less than the first day of the next month
-  },})
+  // Start of the month
+  const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0, 0);
+
+  // End of the month
+  const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
+
+  const result = await BazertModel.find({
+    createdAt: {
+      $gte: startOfMonth, // Greater than or equal to the first day of the month
+      $lte: endOfMonth,   // Less than or equal to the last day of the month
+    },
+  })
     .populate({
       path: "personId", // Reference field in the schema
       select: "name phone", // Include these fields from the Roommate model
@@ -34,8 +35,11 @@ async function getAllFromDB() {
     person: deposit.personId, // Move populated data to a `person` field
     personId: deposit.personId?._id || deposit.personId, // Keep the original ID
   }));
+
   return replaceMongoIdInArray(JSON.parse(JSON.stringify(finalResult)));
 }
+
+
 
 
 const insertIntoDB = async (data) => {

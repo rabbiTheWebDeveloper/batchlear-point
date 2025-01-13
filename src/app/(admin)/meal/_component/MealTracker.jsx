@@ -1,5 +1,5 @@
 "use client";
-import { mealTrackerInsertAction, mealTrackerUpdateAction } from "@/app/actions";
+import { mealTrackerGetListAction, mealTrackerInsertAction, mealTrackerUpdateAction } from "@/app/actions";
 import Spinner from "@/componet/ui/Spinner";
 import React, { useState, useCallback, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -14,6 +14,7 @@ const MealTracker = ({ data: initialData , roommade }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(""); 
+    const [selectedDate, setSelectedDate] = useState("");
 
   // Open modal with the selected meal's data
   const openModal = useCallback((personIndex, dayIndex) => {
@@ -81,15 +82,50 @@ const MealTracker = ({ data: initialData , roommade }) => {
   };
 
 
-  // const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Get month (1-based)
+    const currentYear = currentDate.getFullYear(); // Get year
+    const defaultDate = `${currentYear}-${currentMonth}`; // Format as "YYYY-MM"
+    setSelectedDate(defaultDate); // Set default month and year in state
+    handleDateFilter(defaultDate); // Fetch data for the current month and year
+  }, []);
 
-// useEffect(() => {
-//   setIsClient(true);
-// }, []);
+  const handleDateFilter = async (date) => {
+    setSelectedDate(date);
+    if (!date) {
+      setFilteredBazaars(bazaars); // Show all bazaars if no date selected
+      return;
+    }
 
-// if (isLoading) {
-//   return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
-// }
+    const [year, month] = date.split("-");
+    setIsLoading(true); // Show loading spinner while fetching data
+    try {
+      if (month) {
+        const response = await mealTrackerGetListAction(month, year);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setData(response); // Update filteredBazaars with fetched data
+        }
+      }
+    } catch (err) {
+      toast.error("Failed to fetch data. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading spinner
+    }
+  };
+
+
+  const [isClient, setIsClient] = useState(false);
+
+useEffect(() => {
+  setIsClient(true);
+}, []);
+
+if (isLoading) {
+  return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+}
 
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen flex flex-col">
@@ -100,6 +136,17 @@ const MealTracker = ({ data: initialData , roommade }) => {
       {/* Add User Form */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-6">
         <h2 className="text-lg font-semibold mb-4">Add User</h2>
+        <div className="mb-4">
+            <label className="block font-semibold mb-2">
+              Filter by Month and Year:
+            </label>
+            <input
+              type="month" // "month" input to select month and year
+              value={selectedDate}
+              onChange={(e) => handleDateFilter(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md w-60"
+            />
+          </div>
         <div className="flex gap-4">
         <select
             value={selectedUser}

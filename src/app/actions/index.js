@@ -16,6 +16,17 @@ export async function mealTrackerInsertAction(data) {
   }
 }
 
+
+export async function mealTrackerGetListAction(month , year) {
+  try {
+    const response = await mealTrackerQuery.getAllFromDB(month, year);
+    revalidatePath("/(admin)/meal", "page");
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 export async function mealTrackerUpdateAction(mainId, mealId, count, details) {
   try {
     const response = await mealTrackerQuery.updateOneInDB(
@@ -107,6 +118,15 @@ export async function bazerInsertAction(data) {
   }
 }
 
+export async function bazerGetListAction(month, year) {
+  try {
+    const response = await bazerQuery.getAllFromDB(month, year);
+    revalidatePath("/(admin)/bazer", "page");
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
 export async function bazerUpdateAction(id, data) {
   // console.log("data", data);
   try {
