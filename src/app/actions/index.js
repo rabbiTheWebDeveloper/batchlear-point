@@ -1,5 +1,6 @@
 "use server";
 import { bazerQuery } from "@/queries/bazer";
+import { dashboardQuery } from "@/queries/dashboard";
 import { depositQuery } from "@/queries/deposit-money";
 import { mealTrackerQuery } from "@/queries/mealTracker";
 import { otherCostQuery } from "@/queries/other-cost";
@@ -196,6 +197,17 @@ export async function otherCostDeleteAction(id) {
   try {
     const response = await otherCostQuery.deleteByIdFromDB(id);
     revalidatePath("/(admin)/other-cost", "page");
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
+export async function dashboardGetListAction(month, year) {
+  try {
+    const response = await dashboardQuery.getAllFromDB(month, year);
+    revalidatePath("/(admin)/dasboard", "page");
     return response;
   } catch (error) {
     throw new Error(error);

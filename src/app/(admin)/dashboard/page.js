@@ -17,7 +17,7 @@ const page = async() => {
     // console.log(report);
   return (
     <>
-      <Dashboard dashboardData={data}  reports={report} />
+      <Dashboard dashboardDatas={data}  reports={report} />
     </>
   );
 };

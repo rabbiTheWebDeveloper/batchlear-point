@@ -9,6 +9,8 @@ import {
 import { MdAttachMoney, MdOutlinePendingActions } from "react-icons/md";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { useEffect, useState } from "react";
+import { dashboardGetListAction } from "@/app/actions";
 // const reports = [
 //   {
 //     name: "John Doe",
@@ -71,7 +73,10 @@ import html2canvas from "html2canvas";
 //     due: 50,
 //   },
 // ];
-export default function Dashboard({ dashboardData  ,reports}) {
+export default function Dashboard({ dashboardDatas, reports }) {
+  const [dashboardData, setDashboardData] = useState([dashboardDatas]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const downloadPDF = () => {
     const doc = new jsPDF();
     const table = document.getElementById("report-table");
@@ -106,14 +111,60 @@ export default function Dashboard({ dashboardData  ,reports}) {
     });
   };
 
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Get month (1-based)
+    const currentYear = currentDate.getFullYear(); // Get year
+    const defaultDate = `${currentYear}-${currentMonth}`; // Format as "YYYY-MM"
+    setSelectedDate(defaultDate); // Set default month and year in state
+    handleDateFilter(defaultDate); // Fetch data for the current month and year
+  }, []);
+
+  const handleDateFilter = async (date) => {
+    setSelectedDate(date);
+    if (!date) {
+      setFilteredBazaars(bazaars); // Show all bazaars if no date selected
+      return;
+    }
+
+    const [year, month] = date.split("-");
+    setIsLoading(true); // Show loading spinner while fetching data
+    try {
+      if (month) {
+        const response = await dashboardGetListAction(month, year);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setDashboardData(response); // Update filteredBazaars with fetched data
+        }
+      }
+    } catch (err) {
+      toast.error("Failed to fetch data. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading spinner
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+        <div className="mb-4">
+          <label className="block font-semibold mb-2">
+            Filter by Month and Year:
+          </label>
+          <input
+            type="month" // "month" input to select month and year
+            value={selectedDate}
+            onChange={(e) => handleDateFilter(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md w-60"
+          />
+        </div>
+      </div>
       {/* Cards Section */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-         {/* Total Meal */}
-         <div className="flex items-center p-6 bg-white rounded-lg shadow-md">
+        {/* Total Meal */}
+        <div className="flex items-center p-6 bg-white rounded-lg shadow-md">
           <FaUtensils className="text-blue-600 text-4xl mr-4" />
           <div>
             <h2 className="text-lg font-semibold">Total Meal</h2>
@@ -225,7 +276,9 @@ export default function Dashboard({ dashboardData  ,reports}) {
                 key={index}
                 className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
               >
-                <td className="border border-gray-300 px-4 py-2">{report.name}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {report.name}
+                </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {report.totalMeals}
                 </td>
@@ -235,12 +288,18 @@ export default function Dashboard({ dashboardData  ,reports}) {
                 <td className="border border-gray-300 px-4 py-2">
                   ৳ {report.mealCost}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">৳ {report.totalDeposit}</td>
-                <td className="border border-gray-300 px-4 py-2">৳ {report.totalBazar}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  ৳ {report.totalDeposit}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  ৳ {report.totalBazar}
+                </td>
                 <td className="border border-gray-300 px-4 py-2">
                   ৳ {report.sharedCostPerRoommate}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">৳ {report.balance}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  ৳ {report.balance}
+                </td>
               </tr>
             ))}
           </tbody>
