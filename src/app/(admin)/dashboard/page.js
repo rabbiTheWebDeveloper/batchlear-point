@@ -5,16 +5,19 @@ export const dynamic = 'force-dynamic'
 
 const page = async() => {
    let data = {};
+   let report=[]
   
     try {
       data = await dashboardQuery.getAllFromDB(); 
+      report = await dashboardQuery.getAllReportFromDB(); 
        // Fetch data from DB
     } catch (error) {
       console.error("Error fetching data:", error);  // Add error logging for debugging
     }
+    // console.log(report);
   return (
     <>
-      <Dashboard dashboardData={data} />
+      <Dashboard dashboardData={data}  reports={report} />
     </>
   );
 };
