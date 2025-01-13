@@ -1,20 +1,21 @@
 "use client";
-import { bazerInsertAction, bazerUpdateAction, otherCostInsertAction, otherCostUpdateAction } from "@/app/actions";
+import { bazerInsertAction, bazerUpdateAction, otherCostGetListAction, otherCostInsertAction, otherCostUpdateAction } from "@/app/actions";
 import Spinner from "@/componet/ui/Spinner";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 
 const OtherCost = ({ initialBazaars }) => {
   const [bazaars, setBazaars] = useState(initialBazaars);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
   const [newBazar, setNewBazar] = useState({
     name: "",
     cost: "",
     description: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 25;
 
   // Add or Update Bazar
   const handleAddOrUpdateBazar = async () => {
@@ -47,6 +48,41 @@ const OtherCost = ({ initialBazaars }) => {
   const currentBazaars = bazaars.slice(indexOfFirstBazar, indexOfLastBazar);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Get month (1-based)
+    const currentYear = currentDate.getFullYear(); // Get year
+    const defaultDate = `${currentYear}-${currentMonth}`; // Format as "YYYY-MM"
+    setSelectedDate(defaultDate); // Set default month and year in state
+    handleDateFilter(defaultDate); // Fetch data for the current month and year
+  }, []);
+
+  const handleDateFilter = async (date) => {
+    setSelectedDate(date);
+    if (!date) {
+      setFilteredBazaars(bazaars); // Show all bazaars if no date selected
+      return;
+    }
+
+    const [year, month] = date.split("-");
+    setIsLoading(true); // Show loading spinner while fetching data
+    try {
+      if (month) {
+        const response = await otherCostGetListAction(month, year);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setBazaars(response); // Update filteredBazaars with fetched data
+        }
+      }
+    } catch (err) {
+      toast.error("Failed to fetch data. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading spinner
+    }
+  };
+
 
   if (isLoading) return <Spinner size="xl" color="blue" />;
 
@@ -110,6 +146,17 @@ const OtherCost = ({ initialBazaars }) => {
       {/* Table Section */}
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold mb-4 text-gray-800">Entries</h2>
+        <div className="mb-4">
+            <label className="block font-semibold mb-2">
+              Filter by Month and Year:
+            </label>
+            <input
+              type="month" // "month" input to select month and year
+              value={selectedDate}
+              onChange={(e) => handleDateFilter(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md w-60"
+            />
+          </div>
         <table className="w-full table-auto border-collapse border border-gray-200">
           <thead>
             <tr className="bg-blue-600 text-white">

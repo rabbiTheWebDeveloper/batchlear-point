@@ -8,9 +8,14 @@ import { OtherCostModel } from "@/model/other-cost-model";
 
 import { dbConnect } from "@/service/mongo";
 
-async function getAllFromDB() {
+async function getAllFromDB(month = new Date().getMonth() + 1, year = new Date().getFullYear()) {
+  const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0, 0);
+  const endOfMonth = new Date(year, month, 0, 23, 59, 59, 999);
   await dbConnect();
-  const result = await OtherCostModel.find({}).lean();
+  const result = await OtherCostModel.find({ createdAt: {
+    $gte: startOfMonth, 
+    $lt: endOfMonth,    
+  }}).lean();
   return replaceMongoIdInArray(JSON.parse(JSON.stringify(result)));
 }
 

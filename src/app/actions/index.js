@@ -86,6 +86,16 @@ export async function depositInsertAction(data) {
   }
 }
 
+export async function depositGetListAction(month, year) {
+  try {
+    const response = await depositQuery.getAllFromDB(month, year);
+    revalidatePath("/(admin)/deposit-money", "page");
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 export async function depositUpdateAction(id, data) {
   // console.log("data", data);
   try {
@@ -152,6 +162,17 @@ export async function bazerDeleteAction(id) {
 export async function otherCostInsertAction(data) {
   try {
     const response = await otherCostQuery.insertIntoDB(data);
+    revalidatePath("/(admin)/other-cost", "page");
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+
+export async function otherCostGetListAction(month, year) {
+  try {
+    const response = await otherCostQuery.getAllFromDB(month ,year);
     revalidatePath("/(admin)/other-cost", "page");
     return response;
   } catch (error) {

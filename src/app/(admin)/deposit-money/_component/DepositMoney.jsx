@@ -1,12 +1,13 @@
 "use client";
-import { depositInsertAction, depositUpdateAction } from "@/app/actions";
-import React, { useState } from "react";
+import { depositGetListAction, depositInsertAction, depositUpdateAction } from "@/app/actions";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 
 const DepositMoney = ({ persons, deposits: initialDeposits }) => {
   const [deposits, setDeposits] = useState(initialDeposits);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const [newDeposit, setNewDeposit] = useState({
     personId: "",
@@ -75,9 +76,43 @@ const DepositMoney = ({ persons, deposits: initialDeposits }) => {
     setEditDeposit(deposit);
   };
 
-  if (isLoading) {
-    return <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
-  }
+  useEffect(() => {
+    const currentDate = new Date();
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Get month (1-based)
+    const currentYear = currentDate.getFullYear(); // Get year
+    const defaultDate = `${currentYear}-${currentMonth}`; // Format as "YYYY-MM"
+    setSelectedDate(defaultDate); // Set default month and year in state
+    handleDateFilter(defaultDate); // Fetch data for the current month and year
+  }, []);
+
+  const handleDateFilter = async (date) => {
+    setSelectedDate(date);
+    if (!date) {
+      setFilteredBazaars(bazaars); // Show all bazaars if no date selected
+      return;
+    }
+
+    const [year, month] = date.split("-");
+    setIsLoading(true); // Show loading spinner while fetching data
+    try {
+      if (month) {
+        const response = await depositGetListAction(month, year);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          setDeposits(response); // Update filteredBazaars with fetched data
+        }
+      }
+    } catch (err) {
+      toast.error("Failed to fetch data. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading spinner
+    }
+  };
+
+  // if (isLoading) {
+  //   return <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+  // }
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-center">Deposit System</h1>
@@ -137,6 +172,18 @@ const DepositMoney = ({ persons, deposits: initialDeposits }) => {
       {/* Table */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Deposit History</h2>
+
+        <div className="mb-4">
+            <label className="block font-semibold mb-2">
+              Filter by Month and Year:
+            </label>
+            <input
+              type="month" // "month" input to select month and year
+              value={selectedDate}
+              onChange={(e) => handleDateFilter(e.target.value)}
+              className="p-2 border border-gray-300 rounded-md w-60"
+            />
+          </div>
         <table className="w-full border-collapse border border-gray-200">
           <thead>
             <tr className="bg-blue-600 text-white">
