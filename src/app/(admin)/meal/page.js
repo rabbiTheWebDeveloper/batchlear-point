@@ -4,6 +4,8 @@ import MealTracker from "./_component/MealTracker";
 import { roommateQuery } from "@/queries/roommate";
 export const dynamic = 'force-dynamic'
 
+
+
 // const MealTracker = dynamic(() => import("./_component/MealTracker"), { ssr: false });
 
 const Page = async () => {

@@ -117,15 +117,15 @@ const MealTracker = ({ data: initialData , roommade }) => {
   };
 
 
-  const [isClient, setIsClient] = useState(false);
+//   const [isClient, setIsClient] = useState(false);
 
-useEffect(() => {
-  setIsClient(true);
-}, []);
+// useEffect(() => {
+//   setIsClient(true);
+// }, []);
 
-if (isLoading) {
-  return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
-}
+// if (isLoading) {
+//   return  <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+// }
 
   return (
     <div className="p-4 md:p-8 bg-gray-100 min-h-screen flex flex-col">
