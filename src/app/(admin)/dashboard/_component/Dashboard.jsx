@@ -187,62 +187,83 @@ export default function Dashboard({ dashboardDatas, reports }) {
 
       {/* Report Table */}
       <div
-        id="report-table-wrapper"
-        className="overflow-x-auto bg-white rounded-lg shadow-md p-4"
-      >
-        <table
-          id="report-table"
-          className="table-auto w-full border-collapse border border-gray-200"
+  id="report-table-wrapper"
+  className="overflow-x-auto bg-white rounded-lg shadow-md p-4"
+>
+  <table
+    id="report-table"
+    className="table-auto w-full border-collapse border border-gray-200"
+  >
+    <thead>
+      <tr className="bg-gray-200 text-left">
+        <th className="border border-gray-300 px-4 py-2">Name</th>
+        <th className="border border-gray-300 px-4 py-2">Total Meals</th>
+        <th className="border border-gray-300 px-4 py-2">Meal Rate</th>
+        <th className="border border-gray-300 px-4 py-2">Total Meal Cost</th>
+        <th className="border border-gray-300 px-4 py-2">TK Given</th>
+        <th className="border border-gray-300 px-4 py-2">Bazer</th>
+        <th className="border border-gray-300 px-4 py-2">Other Cost</th>
+        <th className="border border-gray-300 px-4 py-2">Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      {reports.map((report, index) => (
+        <tr
+          key={index}
+          className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
         >
-          <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="border border-gray-300 px-4 py-2">Name</th>
-              <th className="border border-gray-300 px-4 py-2">Total Meals</th>
-              <th className="border border-gray-300 px-4 py-2">Meal Rate</th>
-              <th className="border border-gray-300 px-4 py-2">
-                Total Meal Cost
-              </th>
-              <th className="border border-gray-300 px-4 py-2">TK Given</th>
-              <th className="border border-gray-300 px-4 py-2">Bazer</th>
-              <th className="border border-gray-300 px-4 py-2">Other Cost</th>
-              <th className="border border-gray-300 px-4 py-2">Due</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reports.map((report, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
-              >
-                <td className="border border-gray-300 px-4 py-2">
-                  {report.name}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {report.totalMeals}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.mealRate}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.mealCost}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.totalDeposit}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.totalBazar}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.sharedCostPerRoommate}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  ৳ {report.balance}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          <td className="border border-gray-300 px-4 py-2">{report.name}</td>
+          <td className="border border-gray-300 px-4 py-2">
+            {report.totalMeals}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report.mealRate}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report.mealCost}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report.totalDeposit}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report.totalBazar}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report?.sharedCostPerRoommate}
+          </td>
+          <td className="border border-gray-300 px-4 py-2">
+            ৳ {report?.balance?.toFixed(1)}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+    <tfoot>
+      <tr className="bg-gray-300 font-bold">
+        <td className="border border-gray-300 px-4 py-2">Total</td>
+        <td className="border border-gray-300 px-4 py-2">
+          {reports.reduce((sum, r) => sum + r.totalMeals, 0)}
+        </td>
+        <td className="border border-gray-300 px-4 py-2">-</td> {/* Meal rate isn't summed */}
+        <td className="border border-gray-300 px-4 py-2">
+          ৳ {reports.reduce((sum, r) => sum + parseFloat(r.mealCost), 0).toFixed(1)}
+        </td>
+        <td className="border border-gray-300 px-4 py-2">
+          ৳ {reports.reduce((sum, r) => sum + r.totalDeposit, 0).toFixed(1)}
+        </td>
+        <td className="border border-gray-300 px-4 py-2">
+          ৳ {reports.reduce((sum, r) => sum + r.totalBazar, 0).toFixed(1)}
+        </td>
+        <td className="border border-gray-300 px-4 py-2">
+          ৳ {reports.reduce((sum, r) => sum + r.sharedCostPerRoommate, 0).toFixed(1)}
+        </td>
+        <td className="border border-gray-300 px-4 py-2">
+          ৳ {reports.reduce((sum, r) => sum + r.balance, 0)?.toFixed(1)}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
     </div>
   );
 }

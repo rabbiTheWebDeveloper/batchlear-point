@@ -134,12 +134,19 @@ async function getAllReportFromDB() {
       .reduce((sum, deposit) => sum + deposit.amount, 0);
 
     // Calculate balance
-    const mealRate = parseFloat(mealCharge.toFixed(1)); // Example meal rate as a number
-    const mealCost = (totalMeals * mealRate).toFixed(1); // Meal cost rounded to 1 decimal place
+    const mealRate = (Math.ceil(mealCharge * 10) / 10).toFixed(1); // Example meal rate as a number
+    const mealCost = parseFloat(totalMeals * mealRate).toFixed(1); // Meal cost rounded to 1 decimal place
     
-    const balance =totalDeposit - (mealCost + sharedCostPerRoommate);
+    const mybalance = totalDeposit - (Number(mealCost) + Number(sharedCostPerRoommate));
+    const balance = mybalance;
 
+    console.log("Balance" ,balance);
 
+    console.log("Roommate:", roommate.name);
+    console.log("Total Deposit:", totalDeposit);
+    console.log("Meal Cost:", mealCost);
+    console.log("Shared Cost Per Roommate:", sharedCostPerRoommate);
+    
     return {
       name: roommate.name,
       phone: roommate.phone,
