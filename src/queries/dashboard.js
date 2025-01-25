@@ -137,7 +137,7 @@ async function getAllReportFromDB() {
     const mealRate = parseFloat(mealCharge.toFixed(1)); // Example meal rate as a number
     const mealCost = (totalMeals * mealRate).toFixed(1); // Meal cost rounded to 1 decimal place
     
-    const balance = parseFloat((totalDeposit - (mealCost + sharedCostPerRoommate)).toFixed(1));
+    const balance =totalDeposit - (mealCost + sharedCostPerRoommate);
 
 
     return {
