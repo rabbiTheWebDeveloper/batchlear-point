@@ -133,9 +133,9 @@ async function getAllReportFromDB() {
       .reduce((sum, deposit) => sum + deposit.amount, 0);
 
     // Calculate balance
-    const mealRate =Math.round(mealCharge); // Example meal rate
-    const mealCost =Math.ceil(totalMeals * mealRate );
-    const balance = totalDeposit - (mealCost + sharedCostPerRoommate);
+    const mealRate =mealCharge.toFixed(1); // Example meal rate
+    const mealCost =(totalMeals * mealRate ).toFixed(1);
+    const balance = totalDeposit - (mealCost + sharedCostPerRoommate).toFixed(1);
 
     return {
       name: roommate.name,

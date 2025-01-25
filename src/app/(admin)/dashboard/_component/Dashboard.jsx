@@ -11,68 +11,6 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useEffect, useState } from "react";
 import { dashboardGetListAction } from "@/app/actions";
-// const reports = [
-//   {
-//     name: "John Doe",
-//     totalMeals: 15,
-//     mealRate: 50,
-//     totalMealCost: 750,
-//     given: 800,
-//     bazer: 600,
-//     otherCost: 50,
-//     due: 0,
-//   },
-//   {
-//     name: "Jane Smith",
-//     totalMeals: 20,
-//     mealRate: 50,
-//     totalMealCost: 1000,
-//     given: 900,
-//     bazer: 700,
-//     otherCost: 100,
-//     due: 100,
-//   },
-//   {
-//     name: "Alice Johnson",
-//     totalMeals: 12,
-//     mealRate: 50,
-//     totalMealCost: 600,
-//     given: 700,
-//     bazer: 500,
-//     otherCost: 50,
-//     due: 0,
-//   },
-//   {
-//     name: "Bob Brown",
-//     totalMeals: 18,
-//     mealRate: 50,
-//     totalMealCost: 900,
-//     given: 1000,
-//     bazer: 800,
-//     otherCost: 50,
-//     due: -100,
-//   },
-//   {
-//     name: "Charlie Davis",
-//     totalMeals: 10,
-//     mealRate: 50,
-//     totalMealCost: 500,
-//     given: 500,
-//     bazer: 400,
-//     otherCost: 50,
-//     due: 50,
-//   },
-//   {
-//     name: "Eve White",
-//     totalMeals: 25,
-//     mealRate: 50,
-//     totalMealCost: 1250,
-//     given: 1200,
-//     bazer: 1000,
-//     otherCost: 100,
-//     due: 50,
-//   },
-// ];
 export default function Dashboard({ dashboardDatas, reports }) {
   const [dashboardData, setDashboardData] = useState([dashboardDatas]);
   const [selectedDate, setSelectedDate] = useState("");
@@ -202,7 +140,7 @@ export default function Dashboard({ dashboardDatas, reports }) {
           <div>
             <h2 className="text-lg font-semibold">Meal Charge</h2>
             <p className="text-gray-600 text-xl font-bold">
-              ৳ {dashboardData?.mealCharge?.toFixed(2)}/meal
+              ৳ {dashboardData?.mealCharge?.toFixed(1)}/meal
             </p>
           </div>
         </div>
