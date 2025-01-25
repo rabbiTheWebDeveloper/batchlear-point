@@ -113,7 +113,8 @@ async function getAllReportFromDB() {
 
   // Total other costs and shared cost per roommate
   const totalOtherCost = otherResult.reduce((total, item) => total + item.cost, 0);
-  const sharedCostPerRoommate = totalOtherCost / roommates.length;
+  const sharedCostPerRoommate = parseFloat((totalOtherCost / roommates.length).toFixed(1));
+
 
   // Generate report for each roommate
   const reports = roommates.map((roommate) => {
@@ -133,9 +134,11 @@ async function getAllReportFromDB() {
       .reduce((sum, deposit) => sum + deposit.amount, 0);
 
     // Calculate balance
-    const mealRate =mealCharge.toFixed(1); // Example meal rate
-    const mealCost =(totalMeals * mealRate ).toFixed(1);
-    const balance = (totalDeposit - (mealCost + sharedCostPerRoommate)).toFixed(1);
+    const mealRate = parseFloat(mealCharge.toFixed(1)); // Example meal rate as a number
+    const mealCost = (totalMeals * mealRate).toFixed(1); // Meal cost rounded to 1 decimal place
+    
+    const balance = parseFloat((totalDeposit - (mealCost + sharedCostPerRoommate)).toFixed(1));
+
 
     return {
       name: roommate.name,
