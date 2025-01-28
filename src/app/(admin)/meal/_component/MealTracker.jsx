@@ -174,9 +174,9 @@ const MealTracker = ({ data: initialData , roommade }) => {
         <table className="min-w-full table-auto border-collapse border border-gray-200">
           <thead>
             <tr className="bg-blue-600 text-white">
-              <th className="p-2 border border-blue-500 text-left sticky top-0 z-10 w-32 min-w-[8rem]">
-                Name
-              </th>
+            <th className="p-2 border border-blue-500 text-left sticky top-0 left-0 z-20 bg-blue-600">
+      Name
+    </th>
               {Array.from({ length: 31 }).map((_, i) => (
                 <th
                   key={i}
@@ -198,9 +198,10 @@ const MealTracker = ({ data: initialData , roommade }) => {
                 key={personIndex}
                 className="hover:bg-gray-100 transition-colors"
               >
-                <td className="p-2 border border-gray-300 font-medium text-sm md:text-base whitespace-nowrap">
-                  {person?.person?.name}
-                </td>
+           <td className="p-2 border border-gray-300 font-medium text-sm md:text-base whitespace-nowrap sticky left-0 bg-white z-10">
+  {person?.person?.name}
+</td>
+
                 {person.meals.map((meal, dayIndex) => (
                   <td
                     key={dayIndex}
