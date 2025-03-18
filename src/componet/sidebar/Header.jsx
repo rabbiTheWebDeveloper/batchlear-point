@@ -23,7 +23,7 @@ export default function Header() {
         </button>
         
         {/* Logo */}
-        <h1 className="text-xl font-bold tracking-wide">Batchlar Point <span className="text-yellow-300">(Beta)</span></h1>
+        <h1 className="text-xl font-bold tracking-wide">Bachelor Point <span className="text-yellow-300">(Beta)</span></h1>
         
         {/* Navigation */}
         <nav className="hidden md:block">
