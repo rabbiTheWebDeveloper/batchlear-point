@@ -1,5 +1,6 @@
 "use client";
 import { depositGetListAction, depositInsertAction, depositUpdateAction } from "@/app/actions";
+import Spinner from "@/componet/ui/Spinner";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -110,9 +111,9 @@ const DepositMoney = ({ persons, deposits: initialDeposits }) => {
     }
   };
 
-  // if (isLoading) {
-  //   return <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
-  // }
+  if (isLoading) {
+    return <Spinner size="xl" color="blue" />; // or a loading spinner, etc.
+  }
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-center">Deposit System</h1>
