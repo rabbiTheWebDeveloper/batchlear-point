@@ -6,6 +6,8 @@ import Link from "next/link";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
+NProgress.configure({ showSpinner: false, trickleSpeed: 2000 });
+
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -22,11 +24,18 @@ export default function Sidebar() {
       setIsOpen(false); // Hide sidebar on page change
     };
 
-    handleStop(); // Hide sidebar when the component re-renders on route change
-  }, [pathname]);
+    router.prefetch(pathname); // Prefetch the route for faster navigation
+    handleStart();
+    const timeout = setTimeout(handleStop, 500); // Ensure progress bar completes
+
+    return () => clearTimeout(timeout);
+  }, [pathname, router]);
 
   return (
     <>
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 w-full h-1 bg-blue-500 z-50" id="progress-bar" />
+      
       {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
