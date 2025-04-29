@@ -17,7 +17,8 @@ const Page = async () => {
   } catch (error) {
     console.error("Error fetching data:", error);  // Add error logging for debugging
   }
-
+// console.log(roommade)
+console.log(data)
   return (
     <>
       <MealTracker data={data} roommade={roommade} />

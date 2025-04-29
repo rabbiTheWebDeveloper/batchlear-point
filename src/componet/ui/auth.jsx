@@ -17,7 +17,7 @@ export function Auth({ children }) {
       const authenticated = isAuthenticated();
 
       if (!authenticated && !isPublicPath) {
-        router.push('/');
+        router.push('/login');
         setIsLoading(false);
       } else if (authenticated && isPublicPath) {
         router.push('/dashboard');
