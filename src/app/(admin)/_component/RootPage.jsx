@@ -105,7 +105,8 @@ const RootPage = ({ mealData, bazerData, reports }) => {
 
       {/* Individual Monthly Meal Report */}
       <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Monthly Meal Report</h1>
+        <h1 className="text-2xl font-bold mb-4">মাসিক খাবার রিপোর্ট
+        </h1>
         <div className="space-y-8">
           {mealData.map((entry) => {
             const { person, meals, month } = entry;
